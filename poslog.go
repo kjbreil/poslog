@@ -137,6 +137,9 @@ type DayID struct {
 
 func (p *POSLog) appendDayID() {
 	var bds []string
+	if len(p.Transaction) == 0 {
+		return
+	}
 	for _, t := range p.Transaction {
 		if len(bds) > 0 {
 			for _, c := range bds {
