@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io"
 	"io/ioutil"
+	"os"
 	"path/filepath"
 	"strings"
 )
@@ -63,10 +64,11 @@ func WriteJSON(filename string, p POSLog) {
 	ioutil.WriteFile(filename, XMLString, 0666)
 }
 
-// func WriteJSONs(folder string, ps POSLogs) {
-// 	os.Mkdir(folder, 0777)
-// 	for _, p := range ps.POSLogs {
-
-// 		WriteJSON(folder + p)
-// 	}
-// }
+func WriteJSONs(folder string, ps POSLogs) {
+	os.Mkdir(folder, 0777)
+	fmt.Println("This is a test")
+	for _, p := range ps.POSLogs {
+		op := filepath.Join(folder, p.Filename)
+		WriteJSON(op, p)
+	}
+}
