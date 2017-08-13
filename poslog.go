@@ -4,14 +4,7 @@
 // NCR specific tags are (will be) set as options
 package poslog
 
-import (
-	"encoding/json"
-	"encoding/xml"
-	"fmt"
-	"io/ioutil"
-)
-
-// POSLog is the super type of a POSLog XML file. The type contains
+// POSLog the main type of a POSLog XMl file. The type contains
 // the marshaling information to marshal and unmarshal to json and xml
 // currently it is not complete and does not handle all fields in
 // source XML
@@ -124,35 +117,4 @@ type PerformanceMetrics struct {
 	RingTime   int `xml:"RingTime" json:"RingTime"`
 	IdleTime   int `xml:"IdleTime" json:"IdleTime"`
 	TenderTime int `xml:"TenderTime" json:"TenderTime"`
-}
-
-func importXML(filename string) (p POSLog) {
-	byteXML, err := ioutil.ReadFile(filename)
-	if err != nil {
-		fmt.Println("FUCK", err)
-	}
-
-	xml.Unmarshal(byteXML, &p)
-
-	return
-}
-
-func writeXML(p POSLog, fn string) {
-	XMLString, err := xml.MarshalIndent(p, "", "  ")
-
-	if err != nil {
-		fmt.Println(err)
-	}
-
-	ioutil.WriteFile(fn, XMLString, 0666)
-}
-
-func writeJSON(p POSLog, fn string) {
-	XMLString, err := json.MarshalIndent(p, "", "  ")
-
-	if err != nil {
-		fmt.Println(err)
-	}
-
-	ioutil.WriteFile(fn, XMLString, 0666)
 }
