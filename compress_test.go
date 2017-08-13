@@ -8,10 +8,10 @@ import (
 func TestReadAllFromZip(t *testing.T) {
 	ps := zipReadAllXML("./input/zip/POSLog-20161230.zip")
 
+	// for _, p := range ps.POSLogs {
+	// 	fmt.Println(p)
+	// }
 	os.Mkdir("output/test", 0777)
-	for _, p := range ps.POSLogs {
-
-		WriteJSON("output/test", p)
-	}
+	WriteJSONs("output/test", ps)
 
 }
