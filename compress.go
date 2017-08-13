@@ -66,7 +66,7 @@ func zipReadAllXML(archive string) (ps POSLogs) {
 			}
 			defer fileReader.Close()
 
-			p := importReaderXML(fileReader)
+			p := importReaderXML(fileReader, file.Name)
 
 			ps.appendPOSLog(p)
 		}

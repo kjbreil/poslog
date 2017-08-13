@@ -19,41 +19,54 @@ func ImportXML(filename string) (p POSLog) {
 	}
 
 	xml.Unmarshal(byteXML, &p)
+	p.appendFilename(filepath.Base(filename))
+	p.appendDayID()
 
 	return
 }
 
-func importReaderXML(f io.ReadCloser) (p POSLog) {
+func importReaderXML(f io.ReadCloser, filename string) (p POSLog) {
 	byteXML, err := ioutil.ReadAll(f)
 	if err != nil {
 		fmt.Println("FUCK", err)
 	}
 	xml.Unmarshal(byteXML, &p)
+	p.appendFilename(filepath.Base(filename))
+	p.appendDayID()
 	return
 }
 
 // WriteXML writes a POSLog object to an XML file given as first argument
-func WriteXML(fn string, p POSLog) {
-	fn = strings.TrimSuffix(fn, filepath.Ext(fn))
-	fn = fn + ".xml"
+func WriteXML(filename string, p POSLog) {
+	// Drop any other extension and stick a xml on there
+	filename = strings.TrimSuffix(filename, filepath.Ext(filename))
+	filename = filename + ".xml"
 	XMLString, err := xml.MarshalIndent(p, "", "  ")
 
 	if err != nil {
 		fmt.Println(err)
 	}
-
-	ioutil.WriteFile(fn, XMLString, 0666)
+	ioutil.WriteFile(filename, XMLString, 0666)
 }
 
 // WriteJSON writes a POSLog object to an json file given as first argument
-func WriteJSON(fn string, p POSLog) {
-	fn = strings.TrimSuffix(fn, filepath.Ext(fn))
-	fn = fn + ".json"
+func WriteJSON(filename string, p POSLog) {
+	// Drop any other extension and stick a json on there
+	filename = strings.TrimSuffix(filename, filepath.Ext(filename))
+	filename = filename + ".json"
 	XMLString, err := json.MarshalIndent(p, "", "  ")
 
 	if err != nil {
 		fmt.Println(err)
 	}
 
-	ioutil.WriteFile(fn, XMLString, 0666)
+	ioutil.WriteFile(filename, XMLString, 0666)
 }
+
+// func WriteJSONs(folder string, ps POSLogs) {
+// 	os.Mkdir(folder, 0777)
+// 	for _, p := range ps.POSLogs {
+
+// 		WriteJSON(folder + p)
+// 	}
+// }
