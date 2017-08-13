@@ -42,12 +42,16 @@ func WriteXML(filename string, p POSLog) {
 	// Drop any other extension and stick a xml on there
 	filename = strings.TrimSuffix(filename, filepath.Ext(filename))
 	filename = filename + ".xml"
-	XMLString, err := xml.MarshalIndent(p, "", "  ")
 
+	ioutil.WriteFile(filename, createXML(p), 0666)
+}
+
+func createXML(p POSLog) []byte {
+	xs, err := xml.MarshalIndent(p, "", "    ")
 	if err != nil {
 		fmt.Println(err)
 	}
-	ioutil.WriteFile(filename, XMLString, 0666)
+	return xs
 }
 
 // WriteJSON writes a POSLog object to an json file given as first argument
@@ -55,13 +59,15 @@ func WriteJSON(filename string, p POSLog) {
 	// Drop any other extension and stick a json on there
 	filename = strings.TrimSuffix(filename, filepath.Ext(filename))
 	filename = filename + ".json"
-	XMLString, err := json.MarshalIndent(p, "", "  ")
+	ioutil.WriteFile(filename, createJSON(p), 0666)
+}
 
+func createJSON(p POSLog) []byte {
+	js, err := json.MarshalIndent(p, "", "  ")
 	if err != nil {
 		fmt.Println(err)
 	}
-
-	ioutil.WriteFile(filename, XMLString, 0666)
+	return js
 }
 
 func WriteJSONs(folder string, ps POSLogs) {
