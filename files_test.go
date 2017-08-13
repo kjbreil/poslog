@@ -11,5 +11,5 @@ func TestWriteXML(t *testing.T) {
 
 func TestWriteJSON(t *testing.T) {
 	data := ImportXML("./input/xml/POSLog-201612301530-54.xml")
-	WriteJSON("./output/TestOut.kadjasljdla", data)
+	WriteJSON("./output/TestOut", data)
 }
