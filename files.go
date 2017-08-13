@@ -66,7 +66,6 @@ func WriteJSON(filename string, p POSLog) {
 
 func WriteJSONs(folder string, ps POSLogs) {
 	os.Mkdir(folder, 0777)
-	fmt.Println("This is a test")
 	for _, p := range ps.POSLogs {
 		op := filepath.Join(folder, p.Filename)
 		WriteJSON(op, p)
