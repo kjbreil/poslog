@@ -1,4 +1,7 @@
-// Package poslog reads(unmarshels) POSLog XML's into go struct
+// Package poslog works with POSLog XML files.
+// Currently writing types for NCR ACS POSLog
+// But can be extended for other POS vendores and all
+// NCR specific tags are (will be) set as options
 package poslog
 
 import (
