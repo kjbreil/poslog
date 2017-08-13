@@ -4,11 +4,17 @@
 // NCR specific tags are (will be) set as options
 package poslog
 
+import (
+	"strings"
+)
+
 // POSLog the main type of a POSLog XMl file. The type contains
 // the marshaling information to marshal and unmarshal to json and xml
 // currently it is not complete and does not handle all fields in
 // source XML
 type POSLog struct {
+	Filename    string
+	DayID       DayID
 	POSLog      string `xml:"POSLog" json:"POSLog"`
 	XMLNSPOSLog string `xml:"xmlns poslog,attr"`
 	XMLNS       string `xml:"xmlns,attr"`
@@ -28,11 +34,11 @@ type POSLog struct {
 // a literal transaction at the register but each complete actions
 // at the register so a sign in to register would be a transactions
 type Transaction struct {
-	RetailStoreID     *int    `xml:"RetailStoreID" json:"RetailStoreID"`
-	WorkstationID     *int    `xml:"WorkstationID" json:"WorkstationID"`
-	SequenceNumber    *int    `xml:"SequenceNumber" json:"SequenceNumber"`
-	BusinessDayDate   *string `xml:"BusinessDayDate" json:"BusinessDayDate"`
-	EndDateTime       *string `xml:"EndDateTime" json:"EndDateTime"`
+	RetailStoreID     int    `xml:"RetailStoreID" json:"RetailStoreID"`
+	WorkstationID     int    `xml:"WorkstationID" json:"WorkstationID"`
+	SequenceNumber    int    `xml:"SequenceNumber" json:"SequenceNumber"`
+	BusinessDayDate   string `xml:"BusinessDayDate" json:"BusinessDayDate"`
+	EndDateTime       string `xml:"EndDateTime" json:"EndDateTime"`
 	OperatorID        *OperatorID
 	CurrencyCode      *string `xml:"CurrencyCode" json:"CurrencyCode"`
 	RetailTransaction *RetailTransaction
@@ -117,4 +123,52 @@ type PerformanceMetrics struct {
 	RingTime   int `xml:"RingTime" json:"RingTime"`
 	IdleTime   int `xml:"IdleTime" json:"IdleTime"`
 	TenderTime int `xml:"TenderTime" json:"TenderTime"`
+}
+
+// DayID no a part of POSLog XML directly but is used as a simple way of
+// grouping and sorting by day. Format is YYYYMMDD, which will always sort
+// an makes for easy ranges. This type will be expanded with validation
+type DayID struct {
+	DayID string
+	Year  string
+	Month string
+	Day   string
+}
+
+func (p *POSLog) appendDayID() {
+	var bds []string
+	for _, t := range p.Transaction {
+		if len(bds) > 0 {
+			for _, c := range bds {
+				if t.BusinessDayDate == c {
+					continue
+				} else {
+					bds = append(bds, t.BusinessDayDate)
+					continue
+				}
+			}
+		} else {
+			bds = append(bds, t.BusinessDayDate)
+		}
+
+	}
+	if len(bds) > 1 {
+		panic("More Buisness days")
+	} else {
+		ymd := strings.Split(bds[0], "-")
+		p.DayID.toDayID(ymd[0], ymd[1], ymd[2])
+	}
+	return
+}
+
+func (p *POSLog) appendFilename(filename string) {
+	p.Filename = filename
+}
+
+func (d *DayID) toDayID(year string, month string, day string) {
+	d.Year = year
+	d.Month = month
+	d.Day = day
+	d.DayID = year + month + day
+	return
 }
