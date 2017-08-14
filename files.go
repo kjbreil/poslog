@@ -26,7 +26,7 @@ func ImportXML(filename string) (p POSLog) {
 	return
 }
 
-func importReaderXML(f io.ReadCloser, filename string) (p POSLog) {
+func importReaderXML(f io.Reader, filename string) (p POSLog) {
 	byteXML, err := ioutil.ReadAll(f)
 	if err != nil {
 		fmt.Println("FUCK", err)
