@@ -1,9 +1,12 @@
 package poslog
 
 import (
+	"archive/tar"
 	"archive/zip"
+	"compress/gzip"
 	"fmt"
-	"os"
+	"io"
+	"log"
 	"path/filepath"
 	"strings"
 )
@@ -54,7 +57,6 @@ func zipReadAllXML(archive string) (ps POSLogs) {
 		ext := filepath.Ext(file.Name)
 		noext := strings.TrimSuffix(file.Name, ext)
 		ofp := filepath.Join("output", an)
-		os.MkdirAll(ofp, 0777)
 
 		if ext == ".xml" {
 
@@ -73,4 +75,77 @@ func zipReadAllXML(archive string) (ps POSLogs) {
 	}
 
 	return
+}
+
+func tarJSONs(wr io.Writer, ps POSLogs) {
+	tw := tar.NewWriter(wr)
+	defer tw.Close()
+	for _, file := range ps.POSLogs {
+		posLogString := createJSON(file)
+		filename := strings.TrimSuffix(file.Filename, filepath.Ext(file.Filename)) + ".json"
+		hdr := &tar.Header{
+			Name: filename,
+			Mode: 0666,
+			Size: int64(len(posLogString)),
+		}
+		if err := tw.WriteHeader(hdr); err != nil {
+			log.Fatalln(err)
+		}
+		if _, err := tw.Write([]byte(posLogString)); err != nil {
+			log.Fatalln(err)
+		}
+	}
+
+	if err := tw.Close(); err != nil {
+		log.Fatalln(err)
+	}
+
+}
+
+func tarXMLs(wr io.Writer, ps POSLogs) {
+	tw := tar.NewWriter(wr)
+	defer tw.Close()
+	for _, file := range ps.POSLogs {
+		posLogString := createXML(file)
+		filename := strings.TrimSuffix(file.Filename, filepath.Ext(file.Filename)) + ".xml"
+		hdr := &tar.Header{
+			Name: filename,
+			Mode: 0666,
+			Size: int64(len(posLogString)),
+		}
+		if err := tw.WriteHeader(hdr); err != nil {
+			log.Fatalln(err)
+		}
+		if _, err := tw.Write([]byte(posLogString)); err != nil {
+			log.Fatalln(err)
+		}
+	}
+
+	if err := tw.Close(); err != nil {
+		log.Fatalln(err)
+	}
+
+}
+
+func gzipJSONs(file io.Writer, ps POSLogs) {
+
+	gz := gzip.NewWriter(file)
+	defer gz.Close()
+	tarJSONs(gz, ps)
+
+	if err := gz.Close(); err != nil {
+		log.Fatalln(err)
+	}
+
+}
+
+func gzipXMLs(file io.Writer, ps POSLogs) {
+	gz := gzip.NewWriter(file)
+	defer gz.Close()
+	tarXMLs(gz, ps)
+
+	if err := gz.Close(); err != nil {
+		log.Fatalln(err)
+	}
+
 }
