@@ -3,12 +3,16 @@ package poslog
 import (
 	"archive/tar"
 	"archive/zip"
-	"compress/gzip"
 	"fmt"
 	"io"
 	"log"
 	"path/filepath"
 	"strings"
+
+	"github.com/klauspost/compress/gzip"
+
+	"github.com/golang/snappy"
+	xz "github.com/ulikunitz/xz"
 )
 
 // POSLogs is an array of poslog grouped by store(s) and dayid(s)
@@ -82,7 +86,7 @@ func tarJSONs(wr io.Writer, ps POSLogs) {
 	defer tw.Close()
 	for _, file := range ps.POSLogs {
 		posLogString := createJSON(file)
-		filename := strings.TrimSuffix(file.Filename, filepath.Ext(file.Filename)) + ".json"
+		filename := strings.TrimSuffix(file.filename, filepath.Ext(file.filename)) + ".json"
 		hdr := &tar.Header{
 			Name: filename,
 			Mode: 0666,
@@ -107,7 +111,7 @@ func tarXMLs(wr io.Writer, ps POSLogs) {
 	defer tw.Close()
 	for _, file := range ps.POSLogs {
 		posLogString := createXML(file)
-		filename := strings.TrimSuffix(file.Filename, filepath.Ext(file.Filename)) + ".xml"
+		filename := strings.TrimSuffix(file.filename, filepath.Ext(file.filename)) + ".xml"
 		hdr := &tar.Header{
 			Name: filename,
 			Mode: 0666,
@@ -129,7 +133,7 @@ func tarXMLs(wr io.Writer, ps POSLogs) {
 
 func gzipJSONs(file io.Writer, ps POSLogs) {
 
-	gz := gzip.NewWriter(file)
+	gz, _ := gzip.NewWriterLevel(file, 9)
 	defer gz.Close()
 	tarJSONs(gz, ps)
 
@@ -140,11 +144,33 @@ func gzipJSONs(file io.Writer, ps POSLogs) {
 }
 
 func gzipXMLs(file io.Writer, ps POSLogs) {
-	gz := gzip.NewWriter(file)
+	gz, _ := gzip.NewWriterLevel(file, 9)
 	defer gz.Close()
 	tarXMLs(gz, ps)
 
 	if err := gz.Close(); err != nil {
+		log.Fatalln(err)
+	}
+
+}
+
+func xzXMLs(file io.Writer, ps POSLogs) {
+	x, _ := xz.NewWriter(file)
+	defer x.Close()
+	tarXMLs(x, ps)
+
+	if err := x.Close(); err != nil {
+		log.Fatalln(err)
+	}
+
+}
+
+func snappyXMLs(file io.Writer, ps POSLogs) {
+	sn := snappy.NewWriter(file)
+	defer sn.Close()
+	tarXMLs(sn, ps)
+
+	if err := sn.Close(); err != nil {
 		log.Fatalln(err)
 	}
 

@@ -63,3 +63,27 @@ func TestGzipXMLs(t *testing.T) {
 	gzipXMLs(writer, ps)
 
 }
+
+func TestXzXMLs(t *testing.T) {
+	ps := zipReadAllXML("./input/zip/POSLog-20161230.zip")
+	file, err := os.Create("./output/xml_test.tar.xz")
+	if err != nil {
+		t.Fail()
+	}
+	writer := io.Writer(file)
+
+	xzXMLs(writer, ps)
+
+}
+
+func TestSnappyXMLs(t *testing.T) {
+	ps := zipReadAllXML("./input/zip/POSLog-20161230.zip")
+	file, err := os.Create("./output/xml_test.snappy")
+	if err != nil {
+		t.Fail()
+	}
+	writer := io.Writer(file)
+
+	snappyXMLs(writer, ps)
+
+}
