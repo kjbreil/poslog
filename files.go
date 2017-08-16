@@ -21,7 +21,7 @@ func ImportXML(filename string) (p POSLog) {
 
 	xml.Unmarshal(byteXML, &p)
 	p.appendFilename(filepath.Base(filename))
-	p.appendDayID()
+	// p.appendDayID()
 
 	return
 }
@@ -33,7 +33,7 @@ func importReaderXML(f io.Reader, filename string) (p POSLog) {
 	}
 	xml.Unmarshal(byteXML, &p)
 	p.appendFilename(filepath.Base(filename))
-	p.appendDayID()
+	// p.appendDayID()
 	return
 }
 
@@ -73,7 +73,7 @@ func createJSON(p POSLog) []byte {
 func WriteJSONs(folder string, ps POSLogs) {
 	os.Mkdir(folder, 0777)
 	for _, p := range ps.POSLogs {
-		op := filepath.Join(folder, p.Filename)
+		op := filepath.Join(folder, p.filename)
 		WriteJSON(op, p)
 	}
 }
