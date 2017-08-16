@@ -6,7 +6,6 @@ package poslog
 
 import (
 	"encoding/xml"
-	"strings"
 )
 
 // POSLog the main type of a POSLog XMl file. The type contains
@@ -14,71 +13,59 @@ import (
 // currently it is not complete and does not handle all fields in
 // source XML
 type POSLog struct {
-	Filename        string
-	DayID           DayID
-	AttrXmlnsAcs    string         `xml:"xmlns acs,attr"  json:",omitempty"`
-	AttrXmlnsAcssm  string         `xml:"xmlns acssm,attr"  json:",omitempty"`
-	AttrXmlnsAs     string         `xml:"xmlns as,attr"  json:",omitempty"`
-	AttrXmlnsMsxsl  string         `xml:"xmlns msxsl,attr"  json:",omitempty"`
-	AttrXmlnsPoslog string         `xml:"xmlns poslog,attr"  json:",omitempty"`
-	AttrXmlnsRaw    string         `xml:"xmlns raw,attr"  json:",omitempty"`
-	AttrXmlns       string         `xml:" xmlns,attr"  json:",omitempty"`
-	AttrXmlnsXsi    string         `xml:"xmlns xsi,attr"  json:",omitempty"`
-	Transaction     []*Transaction `xml:"http://www.nrf-arts.org/IXRetail/namespace/ Transaction,omitempty" json:"Transaction,omitempty" db:"http://www.nrf-arts.org/IXRetail/namespace/ Transaction,omitempty"`
-	XMLName         xml.Name       `xml:"http://www.nrf-arts.org/IXRetail/namespace/ POSLog,omitempty" json:"POSLog,omitempty"`
+	filename    string
+	dayID       *string
+	XmlnsAcs    *string        `xml:"xmlns acs,attr,omitempty"  json:",omitempty"`
+	XmlnsAcssm  *string        `xml:"xmlns acssm,attr,omitempty"  json:",omitempty"`
+	XmlnsAs     *string        `xml:"xmlns as,attr,omitempty"  json:",omitempty"`
+	XmlnsMsxsl  *string        `xml:"xmlns msxsl,attr,omitempty"  json:",omitempty"`
+	XmlnsPoslog *string        `xml:"xmlns poslog,attr,omitempty"  json:",omitempty"`
+	XmlnsRaw    *string        `xml:"xmlns raw,attr,omitempty"  json:",omitempty"`
+	Xmlns       *string        `xml:"xmlns,attr,omitempty"  json:",omitempty"`
+	XmlnsXsi    *string        `xml:"xmlns xsi,attr,omitempty"  json:",omitempty"`
+	Transaction []*Transaction `xml:"http://www.nrf-arts.org/IXRetail/namespace/ Transaction,omitempty" json:"Transaction,omitempty" db:"http://www.nrf-arts.org/IXRetail/namespace/ Transaction,omitempty"`
+	XMLName     xml.Name       `xml:"http://www.nrf-arts.org/IXRetail/namespace/ POSLog,omitempty" json:"POSLog,omitempty"`
 }
 
+// Transaction is the body of POSLog, each action at the POS is a transaction
 type Transaction struct {
 	BusinessDayDate    *BusinessDayDate    `xml:"BusinessDayDate,omitempty" json:"BusinessDayDate,omitempty" db:"BusinessDayDate,omitempty"`
 	ControlTransaction *ControlTransaction `xml:"ControlTransaction,omitempty" json:"ControlTransaction,omitempty" db:"ControlTransaction,omitempty"`
 	CurrencyCode       *CurrencyCode       `xml:"CurrencyCode,omitempty" json:"CurrencyCode,omitempty" db:"CurrencyCode,omitempty"`
 	EndDateTime        *EndDateTime        `xml:"EndDateTime,omitempty" json:"EndDateTime,omitempty" db:"EndDateTime,omitempty"`
-	OperatorID         *OperatorID         `xml:"OperatorID,omitempty" json:"OperatorID,omitempty" db:"OperatorID,omitempty"`
-	RetailStoreID      *RetailStoreID      `xml:"RetailStoreID,omitempty" json:"RetailStoreID,omitempty" db:"RetailStoreID,omitempty"`
-	RetailTransaction  *RetailTransaction  `xml:"RetailTransaction,omitempty" json:"RetailTransaction,omitempty" db:"RetailTransaction,omitempty"`
-	SequenceNumber     *SequenceNumber     `xml:"SequenceNumber,omitempty" json:"SequenceNumber,omitempty" db:"SequenceNumber,omitempty"`
-	WorkstationID      *WorkstationID      `xml:"WorkstationID,omitempty" json:"WorkstationID,omitempty" db:"WorkstationID,omitempty"`
-	XMLName            xml.Name            `xml:"Transaction,omitempty" json:"Transaction,omitempty"`
+	OperatorID         *OperatorID
+	RetailStoreID      *RetailStoreID     `xml:"RetailStoreID,omitempty" json:"RetailStoreID,omitempty" db:"RetailStoreID,omitempty"`
+	RetailTransaction  *RetailTransaction `xml:"RetailTransaction,omitempty" json:"RetailTransaction,omitempty" db:"RetailTransaction,omitempty"`
+	SequenceNumber     *SequenceNumber    `xml:"SequenceNumber,omitempty" json:"SequenceNumber,omitempty" db:"SequenceNumber,omitempty"`
+	WorkstationID      *WorkstationID     `xml:"WorkstationID,omitempty" json:"WorkstationID,omitempty" db:"WorkstationID,omitempty"`
+	XMLName            xml.Name           `xml:"Transaction,omitempty" json:"Transaction,omitempty"`
 }
 
-type RetailStoreID struct {
-	Text    string   `xml:",chardata" json:",omitempty"`
-	XMLName xml.Name `xml:"RetailStoreID,omitempty" json:"RetailStoreID,omitempty"`
-}
+// RetailStoreID is Store number
+type RetailStoreID int
 
-type WorkstationID struct {
-	Text    string   `xml:",chardata" json:",omitempty"`
-	XMLName xml.Name `xml:"WorkstationID,omitempty" json:"WorkstationID,omitempty"`
-}
+// WorkstationID is terminal number of transaction
+type WorkstationID int
 
-type SequenceNumber struct {
-	Text    string   `xml:",chardata" json:",omitempty"`
-	XMLName xml.Name `xml:"SequenceNumber,omitempty" json:"SequenceNumber,omitempty"`
-}
+// SequenceNumber is the order of transaction in buisness day at terminal (WorkstationID)
+type SequenceNumber int
 
-type BusinessDayDate struct {
-	Text    string   `xml:",chardata" json:",omitempty"`
-	XMLName xml.Name `xml:"BusinessDayDate,omitempty" json:"BusinessDayDate,omitempty"`
-}
+// BusinessDayDate is EOD to EOD business day and not actual transaction day
+type BusinessDayDate string
 
-type EndDateTime struct {
-	Text    string   `xml:",chardata" json:",omitempty"`
-	XMLName xml.Name `xml:"EndDateTime,omitempty" json:"EndDateTime,omitempty"`
-}
+// EndDateTime is actual time Transaction ended, date can differ from date in BusinessDayDate
+type EndDateTime string
 
+//
 type OperatorID struct {
-	AttrOperatorName string   `xml:" OperatorName,attr"  json:",omitempty"`
-	Text             string   `xml:",chardata" json:",omitempty"`
-	XMLName          xml.Name `xml:"OperatorID,omitempty" json:"OperatorID,omitempty"`
+	OperatorID   int    `xml:",chardata" json:"OperatorID,omitempty" db:"OperatorID,omitempty"`
+	OperatorName string `xml:" OperatorName,attr,omitempty"  json:",omitempty"`
 }
 
-type CurrencyCode struct {
-	Text    string   `xml:",chardata" json:",omitempty"`
-	XMLName xml.Name `xml:"CurrencyCode,omitempty" json:"CurrencyCode,omitempty"`
-}
+type CurrencyCode string
 
 type RetailTransaction struct {
-	AttrVersion        string              `xml:" Version,attr"  json:",omitempty"`
+	AttrVersion        *string             `xml:" Version,attr,omitempty"  json:",omitempty"`
 	ItemCount          *ItemCount          `xml:"ItemCount,omitempty" json:"ItemCount,omitempty" db:"ItemCount,omitempty"`
 	LineItem           []*LineItem         `xml:"LineItem,omitempty" json:"LineItem,omitempty" db:"LineItem,omitempty"`
 	PerformanceMetrics *PerformanceMetrics `xml:"PerformanceMetrics,omitempty" json:"PerformanceMetrics,omitempty" db:"PerformanceMetrics,omitempty"`
@@ -89,15 +76,9 @@ type RetailTransaction struct {
 	XMLName            xml.Name            `xml:"RetailTransaction,omitempty" json:"RetailTransaction,omitempty"`
 }
 
-type ReceiptDateTime struct {
-	Text    string   `xml:",chardata" json:",omitempty"`
-	XMLName xml.Name `xml:"ReceiptDateTime,omitempty" json:"ReceiptDateTime,omitempty"`
-}
+type ReceiptDateTime string
 
-type TransactionCount struct {
-	Text    string   `xml:",chardata" json:",omitempty"`
-	XMLName xml.Name `xml:"TransactionCount,omitempty" json:"TransactionCount,omitempty"`
-}
+type TransactionCount string
 
 type LineItem struct {
 	AttrEntryMethod              *string              `xml:" EntryMethod,attr,omitempty"  json:",omitempty"`
@@ -122,7 +103,7 @@ type LineItem struct {
 }
 
 type Sale struct {
-	AttrItemType           string                  `xml:" ItemType,attr"  json:",omitempty"`
+	AttrItemType           string                  `xml:" ItemType,attr,omitempty"  json:",omitempty"`
 	Description            *Description            `xml:"Description,omitempty" json:"Description,omitempty" db:"Description,omitempty"`
 	DiscountAmount         *DiscountAmount         `xml:"DiscountAmount,omitempty" json:"DiscountAmount,omitempty" db:"DiscountAmount,omitempty"`
 	ExtendedAmount         *ExtendedAmount         `xml:"ExtendedAmount,omitempty" json:"ExtendedAmount,omitempty" db:"ExtendedAmount,omitempty"`
@@ -140,26 +121,17 @@ type Sale struct {
 }
 
 type POSIdentity struct {
-	AttrPOSIDType string     `xml:" POSIDType,attr"  json:",omitempty"`
+	AttrPOSIDType string     `xml:"POSIDType,attr"  json:",omitempty"`
 	POSItemID     *POSItemID `xml:"POSItemID,omitempty" json:"POSItemID,omitempty" db:"POSItemID,omitempty"`
 	Qualifier     *Qualifier `xml:"Qualifier,omitempty" json:"Qualifier,omitempty" db:"Qualifier,omitempty"`
 	XMLName       xml.Name   `xml:"POSIdentity,omitempty" json:"POSIdentity,omitempty"`
 }
 
-type POSItemID struct {
-	Text    string   `xml:",chardata" json:",omitempty"`
-	XMLName xml.Name `xml:"POSItemID,omitempty" json:"POSItemID,omitempty"`
-}
+type POSItemID string
 
-type Qualifier struct {
-	Text    string   `xml:",chardata" json:",omitempty"`
-	XMLName xml.Name `xml:"Qualifier,omitempty" json:"Qualifier,omitempty"`
-}
+type Qualifier int
 
-type ItemID struct {
-	Text    string   `xml:",chardata" json:",omitempty"`
-	XMLName xml.Name `xml:"ItemID,omitempty" json:"ItemID,omitempty"`
-}
+type ItemID int
 
 type MerchandiseHierarchy struct {
 	AttrAcsSpaceDepartmentDescription string   `xml:"DepartmentDescription,attr"  json:",omitempty"`
@@ -214,12 +186,11 @@ type SaleableMediaID struct {
 }
 
 type Itemizers struct {
-	AttrFoodStampable string   `xml:" FoodStampable,attr"  json:",omitempty"`
-	AttrItemizer1     string   `xml:" Itemizer1,attr"  json:",omitempty"`
-	AttrItemizer2     string   `xml:" Itemizer2,attr"  json:",omitempty"`
-	AttrTax1          string   `xml:" Tax1,attr"  json:",omitempty"`
-	Text              string   `xml:",chardata" json:",omitempty"`
-	XMLName           xml.Name `xml:"Itemizers,omitempty" json:"Itemizers,omitempty"`
+	AttrFoodStampable string `xml:" FoodStampable,attr"  json:",omitempty"`
+	AttrItemizer1     string `xml:" Itemizer1,attr"  json:",omitempty"`
+	AttrItemizer2     string `xml:" Itemizer2,attr"  json:",omitempty"`
+	AttrTax1          string `xml:" Tax1,attr"  json:",omitempty"`
+	Itemizers         string `xml:",chardata" json:",omitempty"`
 }
 
 type Tender struct {
@@ -385,10 +356,7 @@ type Total struct {
 	XMLName       xml.Name `xml:"Total,omitempty" json:"Total,omitempty"`
 }
 
-type ItemCount struct {
-	Text    string   `xml:",chardata" json:",omitempty"`
-	XMLName xml.Name `xml:"ItemCount,omitempty" json:"ItemCount,omitempty"`
-}
+type ItemCount int
 
 type PerformanceMetrics struct {
 	IdleTime   *IdleTime   `xml:"IdleTime,omitempty" json:"IdleTime,omitempty" db:"IdleTime,omitempty"`
@@ -731,53 +699,6 @@ type Disposition struct {
 	XMLName xml.Name `xml:"Disposition,omitempty" json:"Disposition,omitempty"`
 }
 
-// DayID no a part of POSLog XML directly but is used as a simple way of
-// grouping and sorting by day. Format is YYYYMMDD, which will always sort
-// an makes for easy ranges. This type will be expanded with validation
-type DayID struct {
-	DayID string
-	Year  string
-	Month string
-	Day   string
-}
-
-func (p *POSLog) appendDayID() {
-	var bds []string
-	if len(p.Transaction) == 0 {
-		return
-	}
-	for _, t := range p.Transaction {
-		if len(bds) > 0 {
-			for _, c := range bds {
-				if t.BusinessDayDate.Text == c {
-					continue
-				} else {
-					bds = append(bds, t.BusinessDayDate.Text)
-					continue
-				}
-			}
-		} else {
-			bds = append(bds, t.BusinessDayDate.Text)
-		}
-
-	}
-	if len(bds) > 1 {
-		panic("More Buisness days")
-	} else {
-		ymd := strings.Split(bds[0], "-")
-		p.DayID.toDayID(ymd[0], ymd[1], ymd[2])
-	}
-	return
-}
-
 func (p *POSLog) appendFilename(filename string) {
-	p.Filename = filename
-}
-
-func (d *DayID) toDayID(year string, month string, day string) {
-	d.Year = year
-	d.Month = month
-	d.Day = day
-	d.DayID = year + month + day
-	return
+	p.filename = filename
 }
