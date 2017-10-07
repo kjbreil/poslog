@@ -38,12 +38,12 @@ func importReaderXML(f io.Reader, filename string) (p POSLog) {
 }
 
 // WriteXML writes a POSLog object to an XML file given as first argument
-func WriteXML(filename string, p POSLog) {
+func (p *POSLog) WriteXML(filename string) {
 	// Drop any other extension and stick a xml on there
 	filename = strings.TrimSuffix(filename, filepath.Ext(filename))
 	filename = filename + ".xml"
 
-	ioutil.WriteFile(filename, createXML(p), 0666)
+	ioutil.WriteFile(filename, createXML(*p), 0666)
 }
 
 func createXML(p POSLog) []byte {

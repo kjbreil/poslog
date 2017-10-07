@@ -7,7 +7,7 @@ import (
 )
 
 // func TestReadAllFromZip(t *testing.T) {
-// 	ps := zipReadAllXML("./input/zip/POSLog-20161230.zip")
+// 	ps := ZipReadAllXML("./input/zip/POSLog-20161230.zip")
 
 // 	// for _, p := range ps.POSLogs {
 // 	// 	fmt.Println(p)
@@ -18,7 +18,7 @@ import (
 // }
 
 func TestTarJSONs(t *testing.T) {
-	ps := zipReadAllXML("./input/zip/POSLog-20161230.zip")
+	ps := ZipReadAllXML("./input/zip/POSLog-20161230.zip")
 	file, err := os.Create("./output/json_test.tar")
 	if err != nil {
 		t.Fail()
@@ -29,7 +29,7 @@ func TestTarJSONs(t *testing.T) {
 
 }
 func TestGzipJSONs(t *testing.T) {
-	ps := zipReadAllXML("./input/zip/POSLog-20161230.zip")
+	ps := ZipReadAllXML("./input/zip/POSLog-20161230.zip")
 	file, err := os.Create("./output/json_test.tar.gz")
 	if err != nil {
 		t.Fail()
@@ -41,7 +41,7 @@ func TestGzipJSONs(t *testing.T) {
 }
 
 func TestTarXMLs(t *testing.T) {
-	ps := zipReadAllXML("./input/zip/POSLog-20161230.zip")
+	ps := ZipReadAllXML("./input/zip/POSLog-20161230.zip")
 	file, err := os.Create("./output/xml_test.tar")
 	if err != nil {
 		t.Fail()
@@ -53,7 +53,7 @@ func TestTarXMLs(t *testing.T) {
 }
 
 func TestGzipXMLs(t *testing.T) {
-	ps := zipReadAllXML("./input/zip/POSLog-20161230.zip")
+	ps := ZipReadAllXML("./input/zip/POSLog-20161230.zip")
 	file, err := os.Create("./output/xml_test.tar.gz")
 	if err != nil {
 		t.Fail()
@@ -65,7 +65,7 @@ func TestGzipXMLs(t *testing.T) {
 }
 
 func TestXzXMLs(t *testing.T) {
-	ps := zipReadAllXML("./input/zip/POSLog-20161230.zip")
+	ps := ZipReadAllXML("./input/zip/POSLog-20161230.zip")
 	file, err := os.Create("./output/xml_test.tar.xz")
 	if err != nil {
 		t.Fail()
@@ -77,7 +77,7 @@ func TestXzXMLs(t *testing.T) {
 }
 
 func TestSnappyXMLs(t *testing.T) {
-	ps := zipReadAllXML("./input/zip/POSLog-20161230.zip")
+	ps := ZipReadAllXML("./input/zip/POSLog-20161230.zip")
 	file, err := os.Create("./output/xml_test.snappy")
 	if err != nil {
 		t.Fail()

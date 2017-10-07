@@ -49,7 +49,7 @@ func (ps *POSLogs) appendPOSLog(p POSLog) {
 	return
 }
 
-func zipReadAllXML(archive string) (ps POSLogs) {
+func ZipReadAllXML(archive string) (ps POSLogs) {
 
 	an := strings.TrimSuffix(filepath.Base(archive), filepath.Ext(filepath.Base(archive)))
 	reader, err := zip.OpenReader(archive)

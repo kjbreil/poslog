@@ -6,6 +6,8 @@ package poslog
 
 import (
 	"encoding/xml"
+	"log"
+	"time"
 )
 
 // POSLog the main type of a POSLog XMl file. The type contains
@@ -129,9 +131,9 @@ type POSIdentity struct {
 
 type POSItemID string
 
-type Qualifier int
+type Qualifier string
 
-type ItemID int
+type ItemID string
 
 type MerchandiseHierarchy struct {
 	AttrAcsSpaceDepartmentDescription string   `xml:"DepartmentDescription,attr"  json:",omitempty"`
@@ -140,50 +142,23 @@ type MerchandiseHierarchy struct {
 	XMLName                           xml.Name `xml:"MerchandiseHierarchy,omitempty" json:"MerchandiseHierarchy,omitempty"`
 }
 
-type Description struct {
-	Text    string   `xml:",chardata" json:",omitempty"`
-	XMLName xml.Name `xml:"Description,omitempty" json:"Description,omitempty"`
-}
+type Description string
 
-type RegularSalesUnitPrice struct {
-	Text    string   `xml:",chardata" json:",omitempty"`
-	XMLName xml.Name `xml:"RegularSalesUnitPrice,omitempty" json:"RegularSalesUnitPrice,omitempty"`
-}
+type RegularSalesUnitPrice string
 
-type ExtendedAmount struct {
-	Text    string   `xml:",chardata" json:",omitempty"`
-	XMLName xml.Name `xml:"ExtendedAmount,omitempty" json:"ExtendedAmount,omitempty"`
-}
+type ExtendedAmount string
 
-type DiscountAmount struct {
-	Text    string   `xml:",chardata" json:",omitempty"`
-	XMLName xml.Name `xml:"DiscountAmount,omitempty" json:"DiscountAmount,omitempty"`
-}
+type DiscountAmount string
 
-type ExtendedDiscountAmount struct {
-	Text    string   `xml:",chardata" json:",omitempty"`
-	XMLName xml.Name `xml:"ExtendedDiscountAmount,omitempty" json:"ExtendedDiscountAmount,omitempty"`
-}
+type ExtendedDiscountAmount string
 
-type Quantity struct {
-	Text    string   `xml:",chardata" json:",omitempty"`
-	XMLName xml.Name `xml:"Quantity,omitempty" json:"Quantity,omitempty"`
-}
+type Quantity string
 
-type OperatorSequence struct {
-	Text    string   `xml:",chardata" json:",omitempty"`
-	XMLName xml.Name `xml:"OperatorSequence,omitempty" json:"OperatorSequence,omitempty"`
-}
+type OperatorSequence string
 
-type ReportCode struct {
-	Text    string   `xml:",chardata" json:",omitempty"`
-	XMLName xml.Name `xml:"ReportCode,omitempty" json:"ReportCode,omitempty"`
-}
+type ReportCode string
 
-type SaleableMediaID struct {
-	Text    string   `xml:",chardata" json:",omitempty"`
-	XMLName xml.Name `xml:"SaleableMediaID,omitempty" json:"SaleableMediaID,omitempty"`
-}
+type SaleableMediaID string
 
 type Itemizers struct {
 	AttrFoodStampable string `xml:" FoodStampable,attr"  json:",omitempty"`
@@ -208,15 +183,9 @@ type Tender struct {
 	XMLName                       xml.Name          `xml:"Tender,omitempty" json:"Tender,omitempty"`
 }
 
-type TenderID struct {
-	Text    string   `xml:",chardata" json:",omitempty"`
-	XMLName xml.Name `xml:"TenderID,omitempty" json:"TenderID,omitempty"`
-}
+type TenderID string
 
-type Amount struct {
-	Text    string   `xml:",chardata" json:",omitempty"`
-	XMLName xml.Name `xml:"Amount,omitempty" json:"Amount,omitempty"`
-}
+type Amount string
 
 type Authorization struct {
 	AttrElectronicSignature string                  `xml:" ElectronicSignature,attr"  json:",omitempty"`
@@ -229,25 +198,13 @@ type Authorization struct {
 	XMLName                 xml.Name                `xml:"Authorization,omitempty" json:"Authorization,omitempty"`
 }
 
-type RequestedAmount struct {
-	Text    string   `xml:",chardata" json:",omitempty"`
-	XMLName xml.Name `xml:"RequestedAmount,omitempty" json:"RequestedAmount,omitempty"`
-}
+type RequestedAmount string
 
-type AuthorizationCode struct {
-	Text    string   `xml:",chardata" json:",omitempty"`
-	XMLName xml.Name `xml:"AuthorizationCode,omitempty" json:"AuthorizationCode,omitempty"`
-}
+type AuthorizationCode string
 
-type ReferenceNumber struct {
-	Text    string   `xml:",chardata" json:",omitempty"`
-	XMLName xml.Name `xml:"ReferenceNumber,omitempty" json:"ReferenceNumber,omitempty"`
-}
+type ReferenceNumber string
 
-type AuthorizationDateTime struct {
-	Text    string   `xml:",chardata" json:",omitempty"`
-	XMLName xml.Name `xml:"AuthorizationDateTime,omitempty" json:"AuthorizationDateTime,omitempty"`
-}
+type AuthorizationDateTime string
 
 type CreditDebit struct {
 	AttrCardType                  string   `xml:" CardType,attr"  json:",omitempty"`
@@ -274,50 +231,23 @@ type LoyaltyReward struct {
 	XMLName                        xml.Name                   `xml:"LoyaltyReward,omitempty" json:"LoyaltyReward,omitempty"`
 }
 
-type PromotionID struct {
-	Text    string   `xml:",chardata" json:",omitempty"`
-	XMLName xml.Name `xml:"PromotionID,omitempty" json:"PromotionID,omitempty"`
-}
+type PromotionID string
 
-type EventID struct {
-	Text    string   `xml:",chardata" json:",omitempty"`
-	XMLName xml.Name `xml:"EventID,omitempty" json:"EventID,omitempty"`
-}
+type EventID string
 
-type ReasonCode struct {
-	Text    string   `xml:",chardata" json:",omitempty"`
-	XMLName xml.Name `xml:"ReasonCode,omitempty" json:"ReasonCode,omitempty"`
-}
+type ReasonCode string
 
-type RewardLevel struct {
-	Text    string   `xml:",chardata" json:",omitempty"`
-	XMLName xml.Name `xml:"RewardLevel,omitempty" json:"RewardLevel,omitempty"`
-}
+type RewardLevel string
 
-type RewardCategory struct {
-	Text    string   `xml:",chardata" json:",omitempty"`
-	XMLName xml.Name `xml:"RewardCategory,omitempty" json:"RewardCategory,omitempty"`
-}
+type RewardCategory string
 
-type RewardType struct {
-	Text    string   `xml:",chardata" json:",omitempty"`
-	XMLName xml.Name `xml:"RewardType,omitempty" json:"RewardType,omitempty"`
-}
+type RewardType string
 
-type CustomOfferID struct {
-	Text    string   `xml:",chardata" json:",omitempty"`
-	XMLName xml.Name `xml:"CustomOfferID,omitempty" json:"CustomOfferID,omitempty"`
-}
+type CustomOfferID string
 
-type BaseRewardAmount struct {
-	Text    string   `xml:",chardata" json:",omitempty"`
-	XMLName xml.Name `xml:"BaseRewardAmount,omitempty" json:"BaseRewardAmount,omitempty"`
-}
+type BaseRewardAmount string
 
-type ExtendedRewardAmount struct {
-	Text    string   `xml:",chardata" json:",omitempty"`
-	XMLName xml.Name `xml:"ExtendedRewardAmount,omitempty" json:"ExtendedRewardAmount,omitempty"`
-}
+type ExtendedRewardAmount string
 
 type RewardBasis struct {
 	AmountUsed           *AmountUsed           `xml:"AmountUsed,omitempty" json:"AmountUsed,omitempty" db:"AmountUsed,omitempty"`
@@ -330,25 +260,13 @@ type RewardBasis struct {
 	XMLName              xml.Name              `xml:"RewardBasis,omitempty" json:"RewardBasis,omitempty"`
 }
 
-type QuantityUsed struct {
-	Text    string   `xml:",chardata" json:",omitempty"`
-	XMLName xml.Name `xml:"QuantityUsed,omitempty" json:"QuantityUsed,omitempty"`
-}
+type QuantityUsed string
 
-type WeightUsed struct {
-	Text    string   `xml:",chardata" json:",omitempty"`
-	XMLName xml.Name `xml:"WeightUsed,omitempty" json:"WeightUsed,omitempty"`
-}
+type WeightUsed string
 
-type AmountUsed struct {
-	Text    string   `xml:",chardata" json:",omitempty"`
-	XMLName xml.Name `xml:"AmountUsed,omitempty" json:"AmountUsed,omitempty"`
-}
+type AmountUsed string
 
-type OperatorSequenceReference struct {
-	Text    string   `xml:",chardata" json:",omitempty"`
-	XMLName xml.Name `xml:"OperatorSequenceReference,omitempty" json:"OperatorSequenceReference,omitempty"`
-}
+type OperatorSequenceReference string
 
 type Total struct {
 	AttrTotalType string   `xml:" TotalType,attr"  json:",omitempty"`
@@ -365,20 +283,11 @@ type PerformanceMetrics struct {
 	XMLName    xml.Name    `xml:"PerformanceMetrics,omitempty" json:"PerformanceMetrics,omitempty"`
 }
 
-type RingTime struct {
-	Text    string   `xml:",chardata" json:",omitempty"`
-	XMLName xml.Name `xml:"RingTime,omitempty" json:"RingTime,omitempty"`
-}
+type RingTime string
 
-type IdleTime struct {
-	Text    string   `xml:",chardata" json:",omitempty"`
-	XMLName xml.Name `xml:"IdleTime,omitempty" json:"IdleTime,omitempty"`
-}
+type IdleTime string
 
-type TenderTime struct {
-	Text    string   `xml:",chardata" json:",omitempty"`
-	XMLName xml.Name `xml:"TenderTime,omitempty" json:"TenderTime,omitempty"`
-}
+type TenderTime string
 
 type Tax struct {
 	AttrAcsSpaceTaxDescription string         `xml:"TaxDescription,attr"  json:",omitempty"`
@@ -390,20 +299,11 @@ type Tax struct {
 	XMLName                    xml.Name       `xml:"Tax,omitempty" json:"Tax,omitempty"`
 }
 
-type TaxableAmount struct {
-	Text    string   `xml:",chardata" json:",omitempty"`
-	XMLName xml.Name `xml:"TaxableAmount,omitempty" json:"TaxableAmount,omitempty"`
-}
+type TaxableAmount string
 
-type Percent struct {
-	Text    string   `xml:",chardata" json:",omitempty"`
-	XMLName xml.Name `xml:"Percent,omitempty" json:"Percent,omitempty"`
-}
+type Percent string
 
-type Reason struct {
-	Text    string   `xml:",chardata" json:",omitempty"`
-	XMLName xml.Name `xml:"Reason,omitempty" json:"Reason,omitempty"`
-}
+type Reason string
 
 type ElectronicSignature struct {
 	Svg     *Svg     `xml:"svg,omitempty" json:"svg,omitempty" db:"svg,omitempty"`
@@ -438,25 +338,13 @@ type LoyaltyID struct {
 	XMLName  xml.Name `xml:"LoyaltyID,omitempty" json:"LoyaltyID,omitempty"`
 }
 
-type MembershipID struct {
-	Text    string   `xml:",chardata" json:",omitempty"`
-	XMLName xml.Name `xml:"MembershipID,omitempty" json:"MembershipID,omitempty"`
-}
+type MembershipID string
 
-type HouseholdID struct {
-	Text    string   `xml:",chardata" json:",omitempty"`
-	XMLName xml.Name `xml:"HouseholdID,omitempty" json:"HouseholdID,omitempty"`
-}
+type HouseholdID string
 
-type MembershipLevel struct {
-	Text    string   `xml:",chardata" json:",omitempty"`
-	XMLName xml.Name `xml:"MembershipLevel,omitempty" json:"MembershipLevel,omitempty"`
-}
+type MembershipLevel string
 
-type ItemDescription struct {
-	Text    string   `xml:",chardata" json:",omitempty"`
-	XMLName xml.Name `xml:"ItemDescription,omitempty" json:"ItemDescription,omitempty"`
-}
+type ItemDescription string
 
 type CRMCustomVariable struct {
 	ID      *ID      `xml:"ID,omitempty" json:"ID,omitempty" db:"ID,omitempty"`
@@ -465,20 +353,11 @@ type CRMCustomVariable struct {
 	XMLName xml.Name `xml:"CRMCustomVariable,omitempty" json:"CRMCustomVariable,omitempty"`
 }
 
-type Type struct {
-	Text    string   `xml:",chardata" json:",omitempty"`
-	XMLName xml.Name `xml:"Type,omitempty" json:"Type,omitempty"`
-}
+type Type string
 
-type ID struct {
-	Text    string   `xml:",chardata" json:",omitempty"`
-	XMLName xml.Name `xml:"ID,omitempty" json:"ID,omitempty"`
-}
+type ID string
 
-type Value struct {
-	Text    string   `xml:",chardata" json:",omitempty"`
-	XMLName xml.Name `xml:"Value,omitempty" json:"Value,omitempty"`
-}
+type Value string
 
 type Coupon struct {
 	AttrCouponType string          `xml:" CouponType,attr"  json:",omitempty"`
@@ -494,15 +373,9 @@ type PrimaryLabel struct {
 	XMLName xml.Name `xml:"PrimaryLabel,omitempty" json:"PrimaryLabel,omitempty"`
 }
 
-type ExpirationDate struct {
-	Text    string   `xml:",chardata" json:",omitempty"`
-	XMLName xml.Name `xml:"ExpirationDate,omitempty" json:"ExpirationDate,omitempty"`
-}
+type ExpirationDate string
 
-type ScanCode struct {
-	Text    string   `xml:",chardata" json:",omitempty"`
-	XMLName xml.Name `xml:"ScanCode,omitempty" json:"ScanCode,omitempty"`
-}
+type ScanCode string
 
 type Item struct {
 	AttrItemType           string                  `xml:" ItemType,attr"  json:",omitempty"`
@@ -540,45 +413,21 @@ type CardActivation struct {
 	XMLName        xml.Name        `xml:"CardActivation,omitempty" json:"CardActivation,omitempty"`
 }
 
-type PurchaseAmount struct {
-	Text    string   `xml:",chardata" json:",omitempty"`
-	XMLName xml.Name `xml:"PurchaseAmount,omitempty" json:"PurchaseAmount,omitempty"`
-}
+type PurchaseAmount string
 
-type EntryMode struct {
-	Text    string   `xml:",chardata" json:",omitempty"`
-	XMLName xml.Name `xml:"EntryMode,omitempty" json:"EntryMode,omitempty"`
-}
+type EntryMode string
 
-type Track1 struct {
-	Text    string   `xml:",chardata" json:",omitempty"`
-	XMLName xml.Name `xml:"Track1,omitempty" json:"Track1,omitempty"`
-}
+type Track1 string
 
-type Track2 struct {
-	Text    string   `xml:",chardata" json:",omitempty"`
-	XMLName xml.Name `xml:"Track2,omitempty" json:"Track2,omitempty"`
-}
+type Track2 string
 
-type AccountNumber struct {
-	Text    string   `xml:",chardata" json:",omitempty"`
-	XMLName xml.Name `xml:"AccountNumber,omitempty" json:"AccountNumber,omitempty"`
-}
+type AccountNumber string
 
-type CardType struct {
-	Text    string   `xml:",chardata" json:",omitempty"`
-	XMLName xml.Name `xml:"CardType,omitempty" json:"CardType,omitempty"`
-}
+type CardType string
 
-type Cashback struct {
-	Text    string   `xml:",chardata" json:",omitempty"`
-	XMLName xml.Name `xml:"Cashback,omitempty" json:"Cashback,omitempty"`
-}
+type Cashback string
 
-type AuthorizedChangeAmount struct {
-	Text    string   `xml:",chardata" json:",omitempty"`
-	XMLName xml.Name `xml:"AuthorizedChangeAmount,omitempty" json:"AuthorizedChangeAmount,omitempty"`
-}
+type AuthorizedChangeAmount string
 
 type TenderChange struct {
 	Amount  *Amount  `xml:"Amount,omitempty" json:"Amount,omitempty" db:"Amount,omitempty"`
@@ -594,10 +443,7 @@ type ItemRestriction struct {
 	XMLName              xml.Name              `xml:"ItemRestriction,omitempty" json:"ItemRestriction,omitempty"`
 }
 
-type EndDay struct {
-	Text    string   `xml:",chardata" json:",omitempty"`
-	XMLName xml.Name `xml:"EndDay,omitempty" json:"EndDay,omitempty"`
-}
+type EndDay string
 
 type ControlTransaction struct {
 	AttrVersion     string           `xml:" Version,attr"  json:",omitempty"`
@@ -619,40 +465,19 @@ type OperatorSignOn struct {
 	XMLName                        xml.Name                        `xml:"OperatorSignOn,omitempty" json:"OperatorSignOn,omitempty"`
 }
 
-type StartDateTimestamp struct {
-	Text    string   `xml:",chardata" json:",omitempty"`
-	XMLName xml.Name `xml:"StartDateTimestamp,omitempty" json:"StartDateTimestamp,omitempty"`
-}
+type StartDateTimestamp string
 
-type EndDateTimestamp struct {
-	Text    string   `xml:",chardata" json:",omitempty"`
-	XMLName xml.Name `xml:"EndDateTimestamp,omitempty" json:"EndDateTimestamp,omitempty"`
-}
+type EndDateTimestamp string
 
-type OpenBusinessDayDate struct {
-	Text    string   `xml:",chardata" json:",omitempty"`
-	XMLName xml.Name `xml:"OpenBusinessDayDate,omitempty" json:"OpenBusinessDayDate,omitempty"`
-}
+type OpenBusinessDayDate string
 
-type CloseBusinessDayDate struct {
-	Text    string   `xml:",chardata" json:",omitempty"`
-	XMLName xml.Name `xml:"CloseBusinessDayDate,omitempty" json:"CloseBusinessDayDate,omitempty"`
-}
+type CloseBusinessDayDate string
 
-type OpenTransactionSequenceNumber struct {
-	Text    string   `xml:",chardata" json:",omitempty"`
-	XMLName xml.Name `xml:"OpenTransactionSequenceNumber,omitempty" json:"OpenTransactionSequenceNumber,omitempty"`
-}
+type OpenTransactionSequenceNumber string
 
-type CloseTransactionSequenceNumber struct {
-	Text    string   `xml:",chardata" json:",omitempty"`
-	XMLName xml.Name `xml:"CloseTransactionSequenceNumber,omitempty" json:"CloseTransactionSequenceNumber,omitempty"`
-}
+type CloseTransactionSequenceNumber string
 
-type NoSale struct {
-	Text    string   `xml:",chardata" json:",omitempty"`
-	XMLName xml.Name `xml:"NoSale,omitempty" json:"NoSale,omitempty"`
-}
+type NoSale string
 
 type OperatorSignOff struct {
 	CloseBusinessDayDate           *CloseBusinessDayDate           `xml:"CloseBusinessDayDate,omitempty" json:"CloseBusinessDayDate,omitempty" db:"CloseBusinessDayDate,omitempty"`
@@ -694,11 +519,19 @@ type ItemNotFound struct {
 	XMLName              xml.Name              `xml:"ItemNotFound,omitempty" json:"ItemNotFound,omitempty"`
 }
 
-type Disposition struct {
-	Text    string   `xml:",chardata" json:",omitempty"`
-	XMLName xml.Name `xml:"Disposition,omitempty" json:"Disposition,omitempty"`
-}
+type Disposition string
 
 func (p *POSLog) appendFilename(filename string) {
 	p.filename = filename
+}
+
+// return the end DateTime for the transaction
+func (tr *Transaction) End() time.Time {
+	tf := "2006-01-02T15:04:05"
+	eds := string(*tr.EndDateTime)
+	edd, err := time.Parse(tf, eds)
+	if err != nil {
+		log.Fatalln(err)
+	}
+	return edd
 }
