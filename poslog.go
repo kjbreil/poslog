@@ -7,6 +7,8 @@ package poslog
 import (
 	"encoding/xml"
 	"log"
+	"strconv"
+	"strings"
 	"time"
 )
 
@@ -31,57 +33,39 @@ type POSLog struct {
 
 // Transaction is the body of POSLog, each action at the POS is a transaction
 type Transaction struct {
-	BusinessDayDate    *BusinessDayDate    `xml:"BusinessDayDate,omitempty" json:"BusinessDayDate,omitempty" db:"BusinessDayDate,omitempty"`
+	TransactionID      string              `json:"TransactionID" db:"TransactionID"`
+	BusinessDayDate    string              `xml:"BusinessDayDate" json:"BusinessDayDate" db:"BusinessDayDate"`
 	ControlTransaction *ControlTransaction `xml:"ControlTransaction,omitempty" json:"ControlTransaction,omitempty" db:"ControlTransaction,omitempty"`
-	CurrencyCode       *CurrencyCode       `xml:"CurrencyCode,omitempty" json:"CurrencyCode,omitempty" db:"CurrencyCode,omitempty"`
-	EndDateTime        *EndDateTime        `xml:"EndDateTime,omitempty" json:"EndDateTime,omitempty" db:"EndDateTime,omitempty"`
+	CurrencyCode       *string             `xml:"CurrencyCode,omitempty" json:"CurrencyCode,omitempty" db:"CurrencyCode,omitempty"`
+	EndDateTime        string              `xml:"EndDateTime" json:"EndDateTime" db:"EndDateTime"`
 	OperatorID         *OperatorID
-	RetailStoreID      *RetailStoreID     `xml:"RetailStoreID,omitempty" json:"RetailStoreID,omitempty" db:"RetailStoreID,omitempty"`
+	RetailStoreID      int                `xml:"RetailStoreID" json:"RetailStoreID" db:"RetailStoreID"`
 	RetailTransaction  *RetailTransaction `xml:"RetailTransaction,omitempty" json:"RetailTransaction,omitempty" db:"RetailTransaction,omitempty"`
-	SequenceNumber     *SequenceNumber    `xml:"SequenceNumber,omitempty" json:"SequenceNumber,omitempty" db:"SequenceNumber,omitempty"`
-	WorkstationID      *WorkstationID     `xml:"WorkstationID,omitempty" json:"WorkstationID,omitempty" db:"WorkstationID,omitempty"`
+	SequenceNumber     int                `xml:"SequenceNumber" json:"SequenceNumber" db:"SequenceNumber"`
+	WorkstationID      int                `xml:"WorkstationID" json:"WorkstationID" db:"WorkstationID"`
 	XMLName            xml.Name           `xml:"Transaction,omitempty" json:"Transaction,omitempty"`
 }
 
-// RetailStoreID is Store number
-type RetailStoreID int
-
-// WorkstationID is terminal number of transaction
-type WorkstationID int
-
-// SequenceNumber is the order of transaction in buisness day at terminal (WorkstationID)
-type SequenceNumber int
-
-// BusinessDayDate is EOD to EOD business day and not actual transaction day
-type BusinessDayDate string
-
-// EndDateTime is actual time Transaction ended, date can differ from date in BusinessDayDate
-type EndDateTime string
-
-//
+// OperatorID is the name and into of operator
 type OperatorID struct {
 	OperatorID   int    `xml:",chardata" json:"OperatorID,omitempty" db:"OperatorID,omitempty"`
 	OperatorName string `xml:" OperatorName,attr,omitempty"  json:",omitempty"`
 }
 
-type CurrencyCode string
-
+// RetailTransaction is any "sale" transaction
 type RetailTransaction struct {
 	AttrVersion        *string             `xml:" Version,attr,omitempty"  json:",omitempty"`
 	ItemCount          *ItemCount          `xml:"ItemCount,omitempty" json:"ItemCount,omitempty" db:"ItemCount,omitempty"`
 	LineItem           []*LineItem         `xml:"LineItem,omitempty" json:"LineItem,omitempty" db:"LineItem,omitempty"`
 	PerformanceMetrics *PerformanceMetrics `xml:"PerformanceMetrics,omitempty" json:"PerformanceMetrics,omitempty" db:"PerformanceMetrics,omitempty"`
-	ReceiptDateTime    *ReceiptDateTime    `xml:"ReceiptDateTime,omitempty" json:"ReceiptDateTime,omitempty" db:"ReceiptDateTime,omitempty"`
+	ReceiptDateTime    string              `xml:"ReceiptDateTime,omitempty" json:"ReceiptDateTime,omitempty" db:"ReceiptDateTime,omitempty"`
 	Total              []*Total            `xml:"Total,omitempty" json:"Total,omitempty" db:"Total,omitempty"`
-	TransactionCount   *TransactionCount   `xml:"TransactionCount,omitempty" json:"TransactionCount,omitempty" db:"TransactionCount,omitempty"`
+	TransactionCount   *string             `xml:"TransactionCount,omitempty" json:"TransactionCount,omitempty" db:"TransactionCount,omitempty"`
 	TransactionLink    *TransactionLink    `xml:"TransactionLink,omitempty" json:"TransactionLink,omitempty" db:"TransactionLink,omitempty"`
 	XMLName            xml.Name            `xml:"RetailTransaction,omitempty" json:"RetailTransaction,omitempty"`
 }
 
-type ReceiptDateTime string
-
-type TransactionCount string
-
+// LineItem is each line at the register, in order of squence
 type LineItem struct {
 	AttrEntryMethod              *string              `xml:" EntryMethod,attr,omitempty"  json:",omitempty"`
 	AttrAcsSpaceKeyedPrice       *string              `xml:"keyedPrice,attr,omitempty"  json:",omitempty"`
@@ -98,7 +82,7 @@ type LineItem struct {
 	LoyaltyMembership            *LoyaltyMembership   `xml:"LoyaltyMembership,omitempty" json:"LoyaltyMembership,omitempty" db:"LoyaltyMembership,omitempty"`
 	LoyaltyReward                *LoyaltyReward       `xml:"LoyaltyReward,omitempty" json:"LoyaltyReward,omitempty" db:"LoyaltyReward,omitempty"`
 	Sale                         *Sale                `xml:"Sale,omitempty" json:"Sale,omitempty" db:"Sale,omitempty"`
-	SequenceNumber               *SequenceNumber      `xml:"SequenceNumber,omitempty" json:"SequenceNumber,omitempty" db:"SequenceNumber,omitempty"`
+	SequenceNumber               int                  `xml:"SequenceNumber" json:"SequenceNumber" db:"SequenceNumber"`
 	Tax                          *Tax                 `xml:"Tax,omitempty" json:"Tax,omitempty" db:"Tax,omitempty"`
 	Tender                       *Tender              `xml:"Tender,omitempty" json:"Tender,omitempty" db:"Tender,omitempty"`
 	XMLName                      xml.Name             `xml:"LineItem,omitempty" json:"LineItem,omitempty"`
@@ -110,7 +94,7 @@ type Sale struct {
 	DiscountAmount         *DiscountAmount         `xml:"DiscountAmount,omitempty" json:"DiscountAmount,omitempty" db:"DiscountAmount,omitempty"`
 	ExtendedAmount         *ExtendedAmount         `xml:"ExtendedAmount,omitempty" json:"ExtendedAmount,omitempty" db:"ExtendedAmount,omitempty"`
 	ExtendedDiscountAmount *ExtendedDiscountAmount `xml:"ExtendedDiscountAmount,omitempty" json:"ExtendedDiscountAmount,omitempty" db:"ExtendedDiscountAmount,omitempty"`
-	ItemID                 *ItemID                 `xml:"ItemID,omitempty" json:"ItemID,omitempty" db:"ItemID,omitempty"`
+	ItemID                 string                  `xml:"ItemID,omitempty" json:"ItemID,omitempty" db:"ItemID,omitempty"`
 	Itemizers              *Itemizers              `xml:"Itemizers,omitempty" json:"Itemizers,omitempty" db:"Itemizers,omitempty"`
 	MerchandiseHierarchy   *MerchandiseHierarchy   `xml:"MerchandiseHierarchy,omitempty" json:"MerchandiseHierarchy,omitempty" db:"MerchandiseHierarchy,omitempty"`
 	OperatorSequence       *OperatorSequence       `xml:"OperatorSequence,omitempty" json:"OperatorSequence,omitempty" db:"OperatorSequence,omitempty"`
@@ -123,17 +107,11 @@ type Sale struct {
 }
 
 type POSIdentity struct {
-	AttrPOSIDType string     `xml:"POSIDType,attr"  json:",omitempty"`
-	POSItemID     *POSItemID `xml:"POSItemID,omitempty" json:"POSItemID,omitempty" db:"POSItemID,omitempty"`
-	Qualifier     *Qualifier `xml:"Qualifier,omitempty" json:"Qualifier,omitempty" db:"Qualifier,omitempty"`
-	XMLName       xml.Name   `xml:"POSIdentity,omitempty" json:"POSIdentity,omitempty"`
+	AttrPOSIDType string   `xml:"POSIDType,attr"  json:",omitempty"`
+	POSItemID     *string  `xml:"POSItemID,omitempty" json:"POSItemID,omitempty" db:"POSItemID,omitempty"`
+	Qualifier     *string  `xml:"Qualifier,omitempty" json:"Qualifier,omitempty" db:"Qualifier,omitempty"`
+	XMLName       xml.Name `xml:"POSIdentity,omitempty" json:"POSIdentity,omitempty"`
 }
-
-type POSItemID string
-
-type Qualifier string
-
-type ItemID string
 
 type MerchandiseHierarchy struct {
 	AttrAcsSpaceDepartmentDescription string   `xml:"DepartmentDescription,attr"  json:",omitempty"`
@@ -252,7 +230,7 @@ type ExtendedRewardAmount string
 type RewardBasis struct {
 	AmountUsed           *AmountUsed           `xml:"AmountUsed,omitempty" json:"AmountUsed,omitempty" db:"AmountUsed,omitempty"`
 	ItemDescription      *ItemDescription      `xml:"ItemDescription,omitempty" json:"ItemDescription,omitempty" db:"ItemDescription,omitempty"`
-	ItemID               *ItemID               `xml:"ItemID,omitempty" json:"ItemID,omitempty" db:"ItemID,omitempty"`
+	ItemID               string                `xml:"ItemID,omitempty" json:"ItemID,omitempty" db:"ItemID,omitempty"`
 	MerchandiseHierarchy *MerchandiseHierarchy `xml:"MerchandiseHierarchy,omitempty" json:"MerchandiseHierarchy,omitempty" db:"MerchandiseHierarchy,omitempty"`
 	POSIdentity          *POSIdentity          `xml:"POSIdentity,omitempty" json:"POSIdentity,omitempty" db:"POSIdentity,omitempty"`
 	QuantityUsed         *QuantityUsed         `xml:"QuantityUsed,omitempty" json:"QuantityUsed,omitempty" db:"QuantityUsed,omitempty"`
@@ -383,7 +361,7 @@ type Item struct {
 	DiscountAmount         *DiscountAmount         `xml:"DiscountAmount,omitempty" json:"DiscountAmount,omitempty" db:"DiscountAmount,omitempty"`
 	ExtendedAmount         *ExtendedAmount         `xml:"ExtendedAmount,omitempty" json:"ExtendedAmount,omitempty" db:"ExtendedAmount,omitempty"`
 	ExtendedDiscountAmount *ExtendedDiscountAmount `xml:"ExtendedDiscountAmount,omitempty" json:"ExtendedDiscountAmount,omitempty" db:"ExtendedDiscountAmount,omitempty"`
-	ItemID                 *ItemID                 `xml:"ItemID,omitempty" json:"ItemID,omitempty" db:"ItemID,omitempty"`
+	ItemID                 string                  `xml:"ItemID,omitempty" json:"ItemID,omitempty" db:"ItemID,omitempty"`
 	Itemizers              *Itemizers              `xml:"Itemizers,omitempty" json:"Itemizers,omitempty" db:"Itemizers,omitempty"`
 	MerchandiseHierarchy   *MerchandiseHierarchy   `xml:"MerchandiseHierarchy,omitempty" json:"MerchandiseHierarchy,omitempty" db:"MerchandiseHierarchy,omitempty"`
 	OperatorSequence       *OperatorSequence       `xml:"OperatorSequence,omitempty" json:"OperatorSequence,omitempty" db:"OperatorSequence,omitempty"`
@@ -406,7 +384,7 @@ type CardActivation struct {
 	AccountNumber  *AccountNumber  `xml:"AccountNumber,omitempty" json:"AccountNumber,omitempty" db:"AccountNumber,omitempty"`
 	CardType       *CardType       `xml:"CardType,omitempty" json:"CardType,omitempty" db:"CardType,omitempty"`
 	EntryMode      *EntryMode      `xml:"EntryMode,omitempty" json:"EntryMode,omitempty" db:"EntryMode,omitempty"`
-	ItemID         *ItemID         `xml:"ItemID,omitempty" json:"ItemID,omitempty" db:"ItemID,omitempty"`
+	ItemID         string          `xml:"ItemID,omitempty" json:"ItemID,omitempty" db:"ItemID,omitempty"`
 	PurchaseAmount *PurchaseAmount `xml:"PurchaseAmount,omitempty" json:"PurchaseAmount,omitempty" db:"PurchaseAmount,omitempty"`
 	Track1         *Track1         `xml:"Track1,omitempty" json:"Track1,omitempty" db:"Track1,omitempty"`
 	Track2         *Track2         `xml:"Track2,omitempty" json:"Track2,omitempty" db:"Track2,omitempty"`
@@ -437,7 +415,7 @@ type TenderChange struct {
 type ItemRestriction struct {
 	EndDay               *EndDay               `xml:"EndDay,omitempty" json:"EndDay,omitempty" db:"EndDay,omitempty"`
 	ItemDescription      *ItemDescription      `xml:"ItemDescription,omitempty" json:"ItemDescription,omitempty" db:"ItemDescription,omitempty"`
-	ItemID               *ItemID               `xml:"ItemID,omitempty" json:"ItemID,omitempty" db:"ItemID,omitempty"`
+	ItemID               string                `xml:"ItemID,omitempty" json:"ItemID,omitempty" db:"ItemID,omitempty"`
 	MerchandiseHierarchy *MerchandiseHierarchy `xml:"MerchandiseHierarchy,omitempty" json:"MerchandiseHierarchy,omitempty" db:"MerchandiseHierarchy,omitempty"`
 	POSIdentity          *POSIdentity          `xml:"POSIdentity,omitempty" json:"POSIdentity,omitempty" db:"POSIdentity,omitempty"`
 	XMLName              xml.Name              `xml:"ItemRestriction,omitempty" json:"ItemRestriction,omitempty"`
@@ -496,24 +474,24 @@ type PriceLookup struct {
 }
 
 type Items struct {
-	ItemID  *ItemID  `xml:"ItemID,omitempty" json:"ItemID,omitempty" db:"ItemID,omitempty"`
+	ItemID  string   `xml:"ItemID,omitempty" json:"ItemID,omitempty" db:"ItemID,omitempty"`
 	XMLName xml.Name `xml:"Items,omitempty" json:"Items,omitempty"`
 }
 
 type TransactionLink struct {
-	AttrEntryMethod string           `xml:" EntryMethod,attr"  json:",omitempty"`
-	AttrReasonCode  string           `xml:" ReasonCode,attr"  json:",omitempty"`
-	BusinessDayDate *BusinessDayDate `xml:"BusinessDayDate,omitempty" json:"BusinessDayDate,omitempty" db:"BusinessDayDate,omitempty"`
-	RetailStoreID   *RetailStoreID   `xml:"RetailStoreID,omitempty" json:"RetailStoreID,omitempty" db:"RetailStoreID,omitempty"`
-	SequenceNumber  *SequenceNumber  `xml:"SequenceNumber,omitempty" json:"SequenceNumber,omitempty" db:"SequenceNumber,omitempty"`
-	WorkstationID   *WorkstationID   `xml:"WorkstationID,omitempty" json:"WorkstationID,omitempty" db:"WorkstationID,omitempty"`
-	XMLName         xml.Name         `xml:"TransactionLink,omitempty" json:"TransactionLink,omitempty"`
+	AttrEntryMethod string   `xml:" EntryMethod,attr"  json:",omitempty"`
+	AttrReasonCode  string   `xml:" ReasonCode,attr"  json:",omitempty"`
+	BusinessDayDate *string  `xml:"BusinessDayDate,omitempty" json:"BusinessDayDate,omitempty" db:"BusinessDayDate,omitempty"`
+	RetailStoreID   *int     `xml:"RetailStoreID,omitempty" json:"RetailStoreID,omitempty" db:"RetailStoreID,omitempty"`
+	SequenceNumber  int      `xml:"SequenceNumber,omitempty" json:"SequenceNumber,omitempty" db:"SequenceNumber,omitempty"`
+	WorkstationID   *int     `xml:"WorkstationID,omitempty" json:"WorkstationID,omitempty" db:"WorkstationID,omitempty"`
+	XMLName         xml.Name `xml:"TransactionLink,omitempty" json:"TransactionLink,omitempty"`
 }
 
 type ItemNotFound struct {
 	Disposition          *Disposition          `xml:"Disposition,omitempty" json:"Disposition,omitempty" db:"Disposition,omitempty"`
 	ItemDescription      *ItemDescription      `xml:"ItemDescription,omitempty" json:"ItemDescription,omitempty" db:"ItemDescription,omitempty"`
-	ItemID               *ItemID               `xml:"ItemID,omitempty" json:"ItemID,omitempty" db:"ItemID,omitempty"`
+	ItemID               string                `xml:"ItemID,omitempty" json:"ItemID,omitempty" db:"ItemID,omitempty"`
 	MerchandiseHierarchy *MerchandiseHierarchy `xml:"MerchandiseHierarchy,omitempty" json:"MerchandiseHierarchy,omitempty" db:"MerchandiseHierarchy,omitempty"`
 	POSIdentity          *POSIdentity          `xml:"POSIdentity,omitempty" json:"POSIdentity,omitempty" db:"POSIdentity,omitempty"`
 	XMLName              xml.Name              `xml:"ItemNotFound,omitempty" json:"ItemNotFound,omitempty"`
@@ -525,13 +503,68 @@ func (p *POSLog) appendFilename(filename string) {
 	p.filename = filename
 }
 
-// return the end DateTime for the transaction
+//End return the end DateTime for the transaction
 func (tr *Transaction) End() time.Time {
-	tf := "2006-01-02T15:04:05"
-	eds := string(*tr.EndDateTime)
-	edd, err := time.Parse(tf, eds)
+	// tf := "2006-01-02T15:04:05"
+	eds := strings.Join([]string{tr.EndDateTime, "07:00"}, "-")
+	edd, err := time.Parse(time.RFC3339, eds)
 	if err != nil {
 		log.Fatalln(err)
 	}
 	return edd
 }
+
+func (tr *Transaction) EndInt() (daytimeid *string) {
+	format := "20060102150405"
+	dtis := tr.End().Format(format)
+	_, err := strconv.Atoi(dtis)
+	if err != nil {
+		log.Println(err)
+		return nil
+	}
+
+	return &dtis
+}
+
+// BusinessDay returns an int in dayid format YYYYMMDD
+// Should actuall Validate this as go time 20060102 like EndInt
+func (tr *Transaction) Dayid() (dayid *string) {
+	// format := "20061002"
+	mdya := strings.Split(string(tr.BusinessDayDate), "-")
+	if len(mdya) == 3 {
+		mdy := strings.Join(mdya, "")
+
+		_, err := strconv.Atoi(mdy)
+		if err != nil {
+			log.Println(err)
+			return nil
+		}
+		return &mdy
+	}
+	return nil
+}
+
+func (tr *Transaction) ID() {
+	var tida []string
+	// first is the enddateint, good for sorting
+	tida = append(tida, string(*tr.EndInt()))
+	// next the dayid, this is buisness date
+	tida = append(tida, string(*tr.Dayid()))
+	// next store number
+	tida = append(tida, strconv.Itoa(tr.RetailStoreID))
+	// Terminal Number
+	tida = append(tida, strconv.Itoa(tr.WorkstationID))
+	// SequenceNumber
+	tida = append(tida, strconv.Itoa(tr.SequenceNumber))
+
+	tr.TransactionID = strings.Join(tida, "-")
+
+	return
+}
+
+/*
+RetailStoreID
+WorkstationID
+SequenceNumber
+
+*/

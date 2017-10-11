@@ -54,7 +54,7 @@ func ZipReadAllXML(archive string) (ps POSLogs) {
 	an := strings.TrimSuffix(filepath.Base(archive), filepath.Ext(filepath.Base(archive)))
 	reader, err := zip.OpenReader(archive)
 	if err != nil {
-		fmt.Println("FUCK THE ZIP DIDN'T WORK")
+		fmt.Println("FUCK THE ZIP DIDN'T WORK", archive)
 	}
 
 	for _, file := range reader.File {

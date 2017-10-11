@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io"
 	"io/ioutil"
+	"log"
 	"os"
 	"path/filepath"
 	"strings"
@@ -76,4 +77,12 @@ func WriteJSONs(folder string, ps POSLogs) {
 		op := filepath.Join(folder, p.filename)
 		WriteJSON(op, p)
 	}
+}
+
+func (tr *Transaction) Json() string {
+	js, err := json.Marshal(tr)
+	if err != nil {
+		log.Println(err)
+	}
+	return string(js)
 }
