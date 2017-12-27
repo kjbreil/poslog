@@ -86,7 +86,7 @@ func tarJSONs(wr io.Writer, ps POSLogs) {
 	defer tw.Close()
 	for _, file := range ps.POSLogs {
 		posLogString := createJSON(file)
-		filename := strings.TrimSuffix(file.filename, filepath.Ext(file.filename)) + ".json"
+		filename := strings.TrimSuffix(file.Filename, filepath.Ext(file.Filename)) + ".json"
 		hdr := &tar.Header{
 			Name: filename,
 			Mode: 0666,
@@ -111,7 +111,7 @@ func tarXMLs(wr io.Writer, ps POSLogs) {
 	defer tw.Close()
 	for _, file := range ps.POSLogs {
 		posLogString := createXML(file)
-		filename := strings.TrimSuffix(file.filename, filepath.Ext(file.filename)) + ".xml"
+		filename := strings.TrimSuffix(file.Filename, filepath.Ext(file.Filename)) + ".xml"
 		hdr := &tar.Header{
 			Name: filename,
 			Mode: 0666,

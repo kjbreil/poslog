@@ -74,7 +74,7 @@ func createJSON(p POSLog) []byte {
 func WriteJSONs(folder string, ps POSLogs) {
 	os.Mkdir(folder, 0777)
 	for _, p := range ps.POSLogs {
-		op := filepath.Join(folder, p.filename)
+		op := filepath.Join(folder, p.Filename)
 		WriteJSON(op, p)
 	}
 }

@@ -17,7 +17,7 @@ import (
 // currently it is not complete and does not handle all fields in
 // source XML
 type POSLog struct {
-	filename    string
+	Filename    string
 	dayID       *string
 	XmlnsAcs    *string        `xml:"xmlns acs,attr,omitempty"  json:",omitempty"`
 	XmlnsAcssm  *string        `xml:"xmlns acssm,attr,omitempty"  json:",omitempty"`
@@ -500,7 +500,7 @@ type ItemNotFound struct {
 type Disposition string
 
 func (p *POSLog) appendFilename(filename string) {
-	p.filename = filename
+	p.Filename = filename
 }
 
 //End return the end DateTime for the transaction
