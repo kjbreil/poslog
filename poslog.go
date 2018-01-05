@@ -508,6 +508,7 @@ func (p *POSLog) GetRetailStoreID() (storeID int) {
 		storeID = 0
 		return
 	}
+
 	storeID = p.Transaction[0].RetailStoreID
 
 	for _, t := range p.Transaction {
