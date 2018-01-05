@@ -131,7 +131,7 @@ func tarXMLs(wr io.Writer, ps POSLogs) {
 
 }
 
-func gzipJSONs(file io.Writer, ps POSLogs) {
+func GzipJSONs(file io.Writer, ps POSLogs) {
 
 	gz, _ := gzip.NewWriterLevel(file, 9)
 	defer gz.Close()

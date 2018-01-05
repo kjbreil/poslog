@@ -36,7 +36,7 @@ func TestGzipJSONs(t *testing.T) {
 	}
 	writer := io.Writer(file)
 
-	gzipJSONs(writer, ps)
+	GzipJSONs(writer, ps)
 
 }
 

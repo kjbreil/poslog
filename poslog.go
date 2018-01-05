@@ -503,6 +503,21 @@ func (p *POSLog) appendFilename(filename string) {
 	p.Filename = filename
 }
 
+func (p *POSLog) GetRetailStoreID() (storeID int) {
+	if len(p.Transaction) == 0 {
+		storeID = 0
+		return
+	}
+	storeID = p.Transaction[0].RetailStoreID
+
+	for _, t := range p.Transaction {
+		if t.RetailStoreID != storeID {
+			log.Fatalln("Multiple Store ID's in single POSLog, I cannot handle that yet")
+		}
+	}
+	return
+}
+
 //End return the end DateTime for the transaction
 func (tr *Transaction) End() time.Time {
 	// tf := "2006-01-02T15:04:05"
