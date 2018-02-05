@@ -6,7 +6,6 @@ package poslog
 
 import (
 	"encoding/xml"
-	"time"
 )
 
 // POSLog the main type of a POSLog XMl file. The type contains
@@ -16,7 +15,7 @@ import (
 type POSLog struct {
 	Filename        *string        `xml:"Filename,omitempty" json:"Filename,omitempty" db:"filename,omitempty"`
 	RetailStoreID   *int           `xml:"RetailStoreID,omitempty" json:"RetailStoreID,omitempty" db:"retail_store_id,omitempty"`
-	BusinessDayDate *time.Time     `xml:"BusinessDayDate,omitempty" json:"BusinessDayDate,omitempty" db:"buisness_day_date,omitempty"`
+	BusinessDayDate *string        `xml:"BusinessDayDate,omitempty" json:"BusinessDayDate,omitempty" db:"buisness_day_date,omitempty"`
 	XmlnsAcs        *string        `xml:"xmlns acs,attr,omitempty"  json:",omitempty"`
 	XmlnsAcssm      *string        `xml:"xmlns acssm,attr,omitempty"  json:",omitempty"`
 	XmlnsAs         *string        `xml:"xmlns as,attr,omitempty"  json:",omitempty"`
@@ -32,10 +31,10 @@ type POSLog struct {
 // Transaction is the body of POSLog, each action at the POS is a transaction
 type Transaction struct {
 	TransactionID      string              `json:"TransactionID" db:"transaction_id"`
-	BusinessDayDate    time.Time           `xml:"BusinessDayDate" json:"BusinessDayDate" db:"buisness_day_date"`
+	BusinessDayDate    string              `xml:"BusinessDayDate" json:"BusinessDayDate" db:"buisness_day_date"`
 	ControlTransaction *ControlTransaction `xml:"ControlTransaction,omitempty" json:"ControlTransaction,omitempty" db:"control_transaction,omitempty"`
 	CurrencyCode       *string             `xml:"CurrencyCode,omitempty" json:"CurrencyCode,omitempty" db:"currency_code,omitempty"`
-	EndDateTime        time.Time           `xml:"EndDateTime" json:"EndDateTime" db:"end_date_time"`
+	EndDateTime        string              `xml:"EndDateTime" json:"EndDateTime" db:"end_date_time"`
 	OperatorID         *OperatorID
 	RetailStoreID      int                `xml:"RetailStoreID" json:"RetailStoreID" db:"retail_store_id"`
 	RetailTransaction  *RetailTransaction `xml:"RetailTransaction,omitempty" json:"RetailTransaction,omitempty"`
@@ -255,7 +254,7 @@ type CRMCustomVariable struct {
 
 type Coupon struct {
 	AttrCouponType string        `xml:" CouponType,attr"  json:",omitempty"`
-	ExpirationDate *time.Time    `xml:"ExpirationDate,omitempty" json:"ExpirationDate,omitempty" db:"ExpirationDate,omitempty"`
+	ExpirationDate *string       `xml:"ExpirationDate,omitempty" json:"ExpirationDate,omitempty" db:"ExpirationDate,omitempty"`
 	Item           *Item         `xml:"Item,omitempty" json:"Item,omitempty" db:"Item,omitempty"`
 	PrimaryLabel   *PrimaryLabel `xml:"PrimaryLabel,omitempty" json:"PrimaryLabel,omitempty" db:"PrimaryLabel,omitempty"`
 	Quantity       *string       `xml:"Quantity,omitempty" json:"Quantity,omitempty" db:"Quantity,omitempty"`
@@ -309,7 +308,7 @@ type TenderChange struct {
 }
 
 type ItemRestriction struct {
-	EndDay               *time.Time            `xml:"EndDay,omitempty" json:"EndDay,omitempty" db:"EndDay,omitempty"`
+	EndDay               *string               `xml:"EndDay,omitempty" json:"EndDay,omitempty" db:"EndDay,omitempty"`
 	ItemDescription      *string               `xml:"ItemDescription,omitempty" json:"ItemDescription,omitempty" db:"ItemDescription,omitempty"`
 	ItemID               string                `xml:"ItemID,omitempty" json:"ItemID,omitempty" db:"ItemID,omitempty"`
 	MerchandiseHierarchy *MerchandiseHierarchy `xml:"MerchandiseHierarchy,omitempty" json:"MerchandiseHierarchy,omitempty" db:"MerchandiseHierarchy,omitempty"`
@@ -328,23 +327,23 @@ type ControlTransaction struct {
 }
 
 type OperatorSignOn struct {
-	CloseBusinessDayDate           *time.Time `xml:"CloseBusinessDayDate,omitempty" json:"CloseBusinessDayDate,omitempty" db:"CloseBusinessDayDate,omitempty"`
-	CloseTransactionSequenceNumber *int       `xml:"CloseTransactionSequenceNumber,omitempty" json:"CloseTransactionSequenceNumber,omitempty" db:"CloseTransactionSequenceNumber,omitempty"`
-	EndDateTimestamp               *time.Time `xml:"EndDateTimestamp,omitempty" json:"EndDateTimestamp,omitempty" db:"EndDateTimestamp,omitempty"`
-	OpenBusinessDayDate            *time.Time `xml:"OpenBusinessDayDate,omitempty" json:"OpenBusinessDayDate,omitempty" db:"OpenBusinessDayDate,omitempty"`
-	OpenTransactionSequenceNumber  *int       `xml:"OpenTransactionSequenceNumber,omitempty" json:"OpenTransactionSequenceNumber,omitempty" db:"OpenTransactionSequenceNumber,omitempty"`
-	StartDateTimestamp             *time.Time `xml:"StartDateTimestamp,omitempty" json:"StartDateTimestamp,omitempty" db:"StartDateTimestamp,omitempty"`
-	XMLName                        xml.Name   `xml:"OperatorSignOn,omitempty" json:"OperatorSignOn,omitempty"`
+	CloseBusinessDayDate           *string  `xml:"CloseBusinessDayDate,omitempty" json:"CloseBusinessDayDate,omitempty" db:"CloseBusinessDayDate,omitempty"`
+	CloseTransactionSequenceNumber *int     `xml:"CloseTransactionSequenceNumber,omitempty" json:"CloseTransactionSequenceNumber,omitempty" db:"CloseTransactionSequenceNumber,omitempty"`
+	EndDateTimestamp               *string  `xml:"EndDateTimestamp,omitempty" json:"EndDateTimestamp,omitempty" db:"EndDateTimestamp,omitempty"`
+	OpenBusinessDayDate            *string  `xml:"OpenBusinessDayDate,omitempty" json:"OpenBusinessDayDate,omitempty" db:"OpenBusinessDayDate,omitempty"`
+	OpenTransactionSequenceNumber  *int     `xml:"OpenTransactionSequenceNumber,omitempty" json:"OpenTransactionSequenceNumber,omitempty" db:"OpenTransactionSequenceNumber,omitempty"`
+	StartDateTimestamp             *string  `xml:"StartDateTimestamp,omitempty" json:"StartDateTimestamp,omitempty" db:"StartDateTimestamp,omitempty"`
+	XMLName                        xml.Name `xml:"OperatorSignOn,omitempty" json:"OperatorSignOn,omitempty"`
 }
 
 type OperatorSignOff struct {
-	CloseBusinessDayDate           *time.Time `xml:"CloseBusinessDayDate,omitempty" json:"CloseBusinessDayDate,omitempty" db:"CloseBusinessDayDate,omitempty"`
-	CloseTransactionSequenceNumber *int       `xml:"CloseTransactionSequenceNumber,omitempty" json:"CloseTransactionSequenceNumber,omitempty" db:"CloseTransactionSequenceNumber,omitempty"`
-	EndDateTimestamp               *time.Time `xml:"EndDateTimestamp,omitempty" json:"EndDateTimestamp,omitempty" db:"EndDateTimestamp,omitempty"`
-	OpenBusinessDayDate            *time.Time `xml:"OpenBusinessDayDate,omitempty" json:"OpenBusinessDayDate,omitempty" db:"OpenBusinessDayDate,omitempty"`
-	OpenTransactionSequenceNumber  *int       `xml:"OpenTransactionSequenceNumber,omitempty" json:"OpenTransactionSequenceNumber,omitempty" db:"OpenTransactionSequenceNumber,omitempty"`
-	StartDateTimestamp             *time.Time `xml:"StartDateTimestamp,omitempty" json:"StartDateTimestamp,omitempty" db:"StartDateTimestamp,omitempty"`
-	XMLName                        xml.Name   `xml:"OperatorSignOff,omitempty" json:"OperatorSignOff,omitempty"`
+	CloseBusinessDayDate           *string  `xml:"CloseBusinessDayDate,omitempty" json:"CloseBusinessDayDate,omitempty" db:"CloseBusinessDayDate,omitempty"`
+	CloseTransactionSequenceNumber *int     `xml:"CloseTransactionSequenceNumber,omitempty" json:"CloseTransactionSequenceNumber,omitempty" db:"CloseTransactionSequenceNumber,omitempty"`
+	EndDateTimestamp               *string  `xml:"EndDateTimestamp,omitempty" json:"EndDateTimestamp,omitempty" db:"EndDateTimestamp,omitempty"`
+	OpenBusinessDayDate            *string  `xml:"OpenBusinessDayDate,omitempty" json:"OpenBusinessDayDate,omitempty" db:"OpenBusinessDayDate,omitempty"`
+	OpenTransactionSequenceNumber  *int     `xml:"OpenTransactionSequenceNumber,omitempty" json:"OpenTransactionSequenceNumber,omitempty" db:"OpenTransactionSequenceNumber,omitempty"`
+	StartDateTimestamp             *string  `xml:"StartDateTimestamp,omitempty" json:"StartDateTimestamp,omitempty" db:"StartDateTimestamp,omitempty"`
+	XMLName                        xml.Name `xml:"OperatorSignOff,omitempty" json:"OperatorSignOff,omitempty"`
 }
 
 type PriceLookup struct {
