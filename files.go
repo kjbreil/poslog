@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"io"
 	"io/ioutil"
-	"log"
 	"os"
 	"path/filepath"
 	"strings"
@@ -71,18 +70,11 @@ func createJSON(p POSLog) []byte {
 	return js
 }
 
+// WriteJSONs writes multiple POSLOGS (in a postlogs object) to multiple json files in a folder
 func WriteJSONs(folder string, ps POSLogs) {
 	os.Mkdir(folder, 0777)
 	for _, p := range ps.POSLogs {
 		op := filepath.Join(folder, p.Filename)
 		WriteJSON(op, p)
 	}
-}
-
-func (tr *Transaction) Json() string {
-	js, err := json.Marshal(tr)
-	if err != nil {
-		log.Println(err)
-	}
-	return string(js)
 }
