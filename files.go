@@ -1,27 +1,27 @@
 package poslog
 
 import (
-	"encoding/json"
+	"archive/zip"
 	"encoding/xml"
 	"fmt"
 	"io"
 	"io/ioutil"
-	"os"
+	"log"
 	"path/filepath"
 	"strings"
 )
 
-// ImportXML takes a POSLog XML file as the argument and returns
-// a POSLog
-func ImportXML(filename string) (p POSLog) {
+// ReadXML takes a POSLog XML file as the argument and returns
+// a POSLog object
+func ReadXML(filename string) (p POSLog) {
 	byteXML, err := ioutil.ReadFile(filename)
 	if err != nil {
-		fmt.Println("FUCK", err)
+		log.Println("Problem reading XML File ")
+		log.Println(err)
 	}
 
 	xml.Unmarshal(byteXML, &p)
-	p.appendFilename(filepath.Base(filename))
-	// p.appendDayID()
+	p.filename(filepath.Base(filename))
 
 	return
 }
@@ -29,11 +29,12 @@ func ImportXML(filename string) (p POSLog) {
 func importReaderXML(f io.Reader, filename string) (p POSLog) {
 	byteXML, err := ioutil.ReadAll(f)
 	if err != nil {
-		fmt.Println("FUCK", err)
+		log.Println("Problem reading XML File ")
+		log.Println(err)
 	}
 	xml.Unmarshal(byteXML, &p)
-	p.appendFilename(filepath.Base(filename))
-	// p.appendDayID()
+	p.filename(filepath.Base(filename))
+
 	return
 }
 
@@ -54,27 +55,30 @@ func createXML(p POSLog) []byte {
 	return xs
 }
 
-// WriteJSON writes a POSLog object to an json file given as first argument
-func WriteJSON(filename string, p POSLog) {
-	// Drop any other extension and stick a json on there
-	filename = strings.TrimSuffix(filename, filepath.Ext(filename))
-	filename = filename + ".json"
-	ioutil.WriteFile(filename, createJSON(p), 0666)
-}
+// ZipReadAllXML Reads all XML from a passed archive
+func ZipReadAllXML(archive string) (ps []POSLog) {
 
-func createJSON(p POSLog) []byte {
-	js, err := json.MarshalIndent(p, "", "  ")
+	reader, err := zip.OpenReader(archive)
 	if err != nil {
-		fmt.Println(err)
+		log.Println("Could not open the zip archive for some reason")
+		log.Println(archive)
 	}
-	return js
-}
 
-// WriteJSONs writes multiple POSLOGS (in a postlogs object) to multiple json files in a folder
-func WriteJSONs(folder string, ps POSLogs) {
-	os.Mkdir(folder, 0777)
-	for _, p := range ps.POSLogs {
-		op := filepath.Join(folder, p.Filename)
-		WriteJSON(op, p)
+	for _, file := range reader.File {
+		ext := filepath.Ext(file.Name)
+
+		if ext == ".xml" {
+			fileReader, err := file.Open()
+			if err != nil {
+				fmt.Println("ERRUR")
+			}
+			defer fileReader.Close()
+
+			p := importReaderXML(fileReader, file.Name)
+
+			ps = append(ps, p)
+		}
 	}
+
+	return
 }
