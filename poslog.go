@@ -513,7 +513,7 @@ func (p *POSLog) GetRetailStoreID() (storeID int) {
 
 	for _, t := range p.Transaction {
 		if t.RetailStoreID != storeID {
-			log.Fatalln("Multiple Store ID's in single POSLog, I cannot handle that yet")
+			log.Fatalln("Multiple Store ID's in single POSLog, I cannot handle that yet", t.RetailStoreID, storeID, p.Filename)
 		}
 	}
 	return
