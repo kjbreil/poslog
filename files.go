@@ -19,9 +19,11 @@ func ReadXML(filename string) (p POSLog) {
 		log.Println("Problem reading XML File ")
 		log.Println(err)
 	}
-
 	xml.Unmarshal(byteXML, &p)
+
 	p.filename(filepath.Base(filename))
+	p.buisnessDayDate()
+	p.storeID()
 
 	return
 }
@@ -33,7 +35,10 @@ func importReaderXML(f io.Reader, filename string) (p POSLog) {
 		log.Println(err)
 	}
 	xml.Unmarshal(byteXML, &p)
+
 	p.filename(filepath.Base(filename))
+	p.buisnessDayDate()
+	p.storeID()
 
 	return
 }
