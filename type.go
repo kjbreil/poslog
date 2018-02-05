@@ -6,9 +6,6 @@ package poslog
 
 import (
 	"encoding/xml"
-	"log"
-	"strconv"
-	"strings"
 	"time"
 )
 
@@ -17,39 +14,40 @@ import (
 // currently it is not complete and does not handle all fields in
 // source XML
 type POSLog struct {
-	Filename    string
-	dayID       *int
-	XmlnsAcs    *string        `xml:"xmlns acs,attr,omitempty"  json:",omitempty"`
-	XmlnsAcssm  *string        `xml:"xmlns acssm,attr,omitempty"  json:",omitempty"`
-	XmlnsAs     *string        `xml:"xmlns as,attr,omitempty"  json:",omitempty"`
-	XmlnsMsxsl  *string        `xml:"xmlns msxsl,attr,omitempty"  json:",omitempty"`
-	XmlnsPoslog *string        `xml:"xmlns poslog,attr,omitempty"  json:",omitempty"`
-	XmlnsRaw    *string        `xml:"xmlns raw,attr,omitempty"  json:",omitempty"`
-	Xmlns       *string        `xml:"xmlns,attr,omitempty"  json:",omitempty"`
-	XmlnsXsi    *string        `xml:"xmlns xsi,attr,omitempty"  json:",omitempty"`
-	Transaction []*Transaction `xml:"http://www.nrf-arts.org/IXRetail/namespace/ Transaction,omitempty" json:"Transaction,omitempty" db:"http://www.nrf-arts.org/IXRetail/namespace/ Transaction,omitempty"`
-	XMLName     xml.Name       `xml:"http://www.nrf-arts.org/IXRetail/namespace/ POSLog,omitempty" json:"POSLog,omitempty"`
+	Filename        *string        `xml:"Filename,omitempty" json:"Filename,omitempty" db:"filename,omitempty"`
+	RetailStoreID   *int           `xml:"RetailStoreID,omitempty" json:"RetailStoreID,omitempty" db:"retail_store_id,omitempty"`
+	BusinessDayDate *time.Time     `xml:"BusinessDayDate,omitempty" json:"BusinessDayDate,omitempty" db:"buisness_day_date,omitempty"`
+	XmlnsAcs        *string        `xml:"xmlns acs,attr,omitempty"  json:",omitempty"`
+	XmlnsAcssm      *string        `xml:"xmlns acssm,attr,omitempty"  json:",omitempty"`
+	XmlnsAs         *string        `xml:"xmlns as,attr,omitempty"  json:",omitempty"`
+	XmlnsMsxsl      *string        `xml:"xmlns msxsl,attr,omitempty"  json:",omitempty"`
+	XmlnsPoslog     *string        `xml:"xmlns poslog,attr,omitempty"  json:",omitempty"`
+	XmlnsRaw        *string        `xml:"xmlns raw,attr,omitempty"  json:",omitempty"`
+	Xmlns           *string        `xml:"xmlns,attr,omitempty"  json:",omitempty"`
+	XmlnsXsi        *string        `xml:"xmlns xsi,attr,omitempty"  json:",omitempty"`
+	Transaction     []*Transaction `xml:"http://www.nrf-arts.org/IXRetail/namespace/ Transaction,omitempty" json:"Transaction,omitempty" db:"http://www.nrf-arts.org/IXRetail/namespace/ Transaction,omitempty"`
+	XMLName         xml.Name       `xml:"http://www.nrf-arts.org/IXRetail/namespace/ POSLog,omitempty" json:"POSLog,omitempty"`
 }
 
 // Transaction is the body of POSLog, each action at the POS is a transaction
 type Transaction struct {
-	TransactionID      string              `json:"TransactionID" db:"TransactionID"`
-	BusinessDayDate    string              `xml:"BusinessDayDate" json:"BusinessDayDate" db:"BusinessDayDate"`
-	ControlTransaction *ControlTransaction `xml:"ControlTransaction,omitempty" json:"ControlTransaction,omitempty" db:"ControlTransaction,omitempty"`
-	CurrencyCode       *string             `xml:"CurrencyCode,omitempty" json:"CurrencyCode,omitempty" db:"CurrencyCode,omitempty"`
-	EndDateTime        string              `xml:"EndDateTime" json:"EndDateTime" db:"EndDateTime"`
+	TransactionID      string              `json:"TransactionID" db:"transaction_id"`
+	BusinessDayDate    time.Time           `xml:"BusinessDayDate" json:"BusinessDayDate" db:"buisness_day_date"`
+	ControlTransaction *ControlTransaction `xml:"ControlTransaction,omitempty" json:"ControlTransaction,omitempty" db:"control_transaction,omitempty"`
+	CurrencyCode       *string             `xml:"CurrencyCode,omitempty" json:"CurrencyCode,omitempty" db:"currency_code,omitempty"`
+	EndDateTime        time.Time           `xml:"EndDateTime" json:"EndDateTime" db:"end_date_time"`
 	OperatorID         *OperatorID
-	RetailStoreID      int                `xml:"RetailStoreID" json:"RetailStoreID" db:"RetailStoreID"`
-	RetailTransaction  *RetailTransaction `xml:"RetailTransaction,omitempty" json:"RetailTransaction,omitempty" db:"RetailTransaction,omitempty"`
-	SequenceNumber     int                `xml:"SequenceNumber" json:"SequenceNumber" db:"SequenceNumber"`
-	WorkstationID      int                `xml:"WorkstationID" json:"WorkstationID" db:"WorkstationID"`
+	RetailStoreID      int                `xml:"RetailStoreID" json:"RetailStoreID" db:"retail_store_id"`
+	RetailTransaction  *RetailTransaction `xml:"RetailTransaction,omitempty" json:"RetailTransaction,omitempty"`
+	SequenceNumber     int                `xml:"SequenceNumber" json:"SequenceNumber" db:"sequence_number"`
+	WorkstationID      int                `xml:"WorkstationID" json:"WorkstationID" db:"workstation_id"`
 	XMLName            xml.Name           `xml:"Transaction,omitempty" json:"Transaction,omitempty"`
 }
 
 // OperatorID is the name and into of operator
 type OperatorID struct {
-	OperatorID   int    `xml:",chardata" json:"OperatorID,omitempty" db:"OperatorID,omitempty"`
-	OperatorName string `xml:" OperatorName,attr,omitempty"  json:",omitempty"`
+	OperatorID   int    `xml:",chardata" json:"OperatorID,omitempty" db:"operator_id,omitempty"`
+	OperatorName string `xml:" OperatorName,attr,omitempty"  json:"operator_name,omitempty"`
 }
 
 // RetailTransaction is any "sale" transaction
@@ -378,89 +376,3 @@ type ItemNotFound struct {
 	POSIdentity          *POSIdentity          `xml:"POSIdentity,omitempty" json:"POSIdentity,omitempty" db:"POSIdentity,omitempty"`
 	XMLName              xml.Name              `xml:"ItemNotFound,omitempty" json:"ItemNotFound,omitempty"`
 }
-
-func (p *POSLog) appendFilename(filename string) {
-	p.Filename = filename
-}
-
-func (p *POSLog) GetRetailStoreID() (storeID int) {
-	if len(p.Transaction) == 0 {
-		storeID = 0
-		return
-	}
-
-	storeID = p.Transaction[0].RetailStoreID
-
-	for _, t := range p.Transaction {
-		if t.RetailStoreID != storeID {
-			log.Fatalln("Multiple Store ID's in single POSLog, I cannot handle that yet", t.RetailStoreID, storeID, p.Filename)
-		}
-	}
-	return
-}
-
-//End return the end DateTime for the transaction
-func (tr *Transaction) End() time.Time {
-	// tf := "2006-01-02T15:04:05"
-	eds := strings.Join([]string{tr.EndDateTime, "07:00"}, "-")
-	edd, err := time.Parse(time.RFC3339, eds)
-	if err != nil {
-		log.Fatalln(err)
-	}
-	return edd
-}
-
-func (tr *Transaction) EndInt() (daytimeid *string) {
-	format := "20060102150405"
-	dtis := tr.End().Format(format)
-	_, err := strconv.Atoi(dtis)
-	if err != nil {
-		log.Println(err)
-		return nil
-	}
-
-	return &dtis
-}
-
-// BusinessDay returns an int in dayid format YYYYMMDD
-// Should actuall Validate this as go time 20060102 like EndInt
-func (tr *Transaction) Dayid() (dayid *int) {
-	// format := "20061002"
-	mdya := strings.Split(string(tr.BusinessDayDate), "-")
-	if len(mdya) == 3 {
-		mdy := strings.Join(mdya, "")
-
-		dayid, err := strconv.Atoi(mdy)
-		if err != nil {
-			log.Println(err)
-			return nil
-		}
-		return &dayid
-	}
-	return nil
-}
-
-func (tr *Transaction) ID() {
-	var tida []string
-	// first is the enddateint, good for sorting
-	tida = append(tida, string(*tr.EndInt()))
-	// next the dayid, this is buisness date
-	tida = append(tida, string(*tr.Dayid()))
-	// next store number
-	tida = append(tida, strconv.Itoa(tr.RetailStoreID))
-	// Terminal Number
-	tida = append(tida, strconv.Itoa(tr.WorkstationID))
-	// SequenceNumber
-	tida = append(tida, strconv.Itoa(tr.SequenceNumber))
-
-	tr.TransactionID = strings.Join(tida, "-")
-
-	return
-}
-
-/*
-RetailStoreID
-WorkstationID
-SequenceNumber
-
-*/
