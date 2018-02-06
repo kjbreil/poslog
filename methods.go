@@ -7,6 +7,34 @@ import (
 	"time"
 )
 
+// func (p *POSLog) transactionCounts() {
+// 	for _, tr := range p.Transaction {
+// 		if tr.RetailTransaction != nil {
+// 			tr.RetailTransaction.counts()
+// 		}
+// 	}
+// }
+
+func NewPOSLog(trs []*Transaction) (p POSLog) {
+	for _, eachTransaction := range trs {
+		p.Transaction = append(p.Transaction, eachTransaction)
+	}
+	return
+}
+
+// each returns all transactions with information pre processed and appended to type
+func (p *POSLog) each() (trs []*Transaction) {
+	if p.Transaction != nil && len(p.Transaction) != 0 {
+		for _, eachTransaction := range p.Transaction {
+			if eachTransaction.RetailTransaction != nil {
+				eachTransaction.RetailTransaction.counts()
+				trs = append(trs, eachTransaction)
+			}
+		}
+	}
+	return
+}
+
 // filename is to append the filename to the poslog object
 func (p *POSLog) filename(filename string) {
 	p.Filename = &filename
@@ -101,4 +129,55 @@ func (tr *Transaction) id() {
 	tr.TransactionID = strings.Join(tida, "-")
 
 	return
+}
+
+func (rt *RetailTransaction) counts() {
+	var lineItemCounts LineItemCounts
+	// rt.LineItemCounts.AgeRestrictionCount = 0
+	// rt.LineItemCounts.CRMCustomVariableCount = 0
+	// rt.LineItemCounts.CardActivationCount = 0
+	// rt.LineItemCounts.ElectronicSignatureCount = 0
+	// rt.LineItemCounts.ItemNotFoundCount = 0
+	// rt.LineItemCounts.ItemRestrictionCount = 0
+	// rt.LineItemCounts.LoyaltyMembershipCount = 0
+	// rt.LineItemCounts.LoyaltyRewardCount = 0
+	// rt.LineItemCounts.SaleCount = 0
+	// rt.LineItemCounts.TaxCount = 0
+	// rt.LineItemCounts.TenderCount = 0
+	for _, li := range rt.LineItem {
+		if li.AgeRestriction != nil {
+			lineItemCounts.AgeRestrictionCount++
+		}
+		if li.CRMCustomVariable != nil {
+			lineItemCounts.CRMCustomVariableCount++
+		}
+		if li.CardActivation != nil {
+			lineItemCounts.CardActivationCount++
+		}
+		if li.ElectronicSignature != nil {
+			lineItemCounts.ElectronicSignatureCount++
+		}
+		if li.ItemNotFound != nil {
+			lineItemCounts.ItemNotFoundCount++
+		}
+		if li.ItemRestriction != nil {
+			lineItemCounts.ItemRestrictionCount++
+		}
+		if li.LoyaltyMembership != nil {
+			lineItemCounts.LoyaltyMembershipCount++
+		}
+		if li.LoyaltyReward != nil {
+			lineItemCounts.LoyaltyRewardCount++
+		}
+		if li.Sale != nil {
+			lineItemCounts.SaleCount++
+		}
+		if li.Tax != nil {
+			lineItemCounts.TaxCount++
+		}
+		if li.Tender != nil {
+			lineItemCounts.TenderCount++
+		}
+	}
+	rt.LineItemCounts = &lineItemCounts
 }
