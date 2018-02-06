@@ -13,19 +13,20 @@ import (
 // currently it is not complete and does not handle all fields in
 // source XML
 type POSLog struct {
-	Filename        *string        `xml:"Filename,omitempty" json:"Filename,omitempty" db:"filename,omitempty"`
-	RetailStoreID   *int           `xml:"RetailStoreID,omitempty" json:"RetailStoreID,omitempty" db:"retail_store_id,omitempty"`
-	BusinessDayDate *string        `xml:"BusinessDayDate,omitempty" json:"BusinessDayDate,omitempty" db:"buisness_day_date,omitempty"`
-	XmlnsAcs        *string        `xml:"xmlns acs,attr,omitempty"  json:",omitempty"`
-	XmlnsAcssm      *string        `xml:"xmlns acssm,attr,omitempty"  json:",omitempty"`
-	XmlnsAs         *string        `xml:"xmlns as,attr,omitempty"  json:",omitempty"`
-	XmlnsMsxsl      *string        `xml:"xmlns msxsl,attr,omitempty"  json:",omitempty"`
-	XmlnsPoslog     *string        `xml:"xmlns poslog,attr,omitempty"  json:",omitempty"`
-	XmlnsRaw        *string        `xml:"xmlns raw,attr,omitempty"  json:",omitempty"`
-	Xmlns           *string        `xml:"xmlns,attr,omitempty"  json:",omitempty"`
-	XmlnsXsi        *string        `xml:"xmlns xsi,attr,omitempty"  json:",omitempty"`
-	Transaction     []*Transaction `xml:"http://www.nrf-arts.org/IXRetail/namespace/ Transaction,omitempty" json:"Transaction,omitempty" db:"http://www.nrf-arts.org/IXRetail/namespace/ Transaction,omitempty"`
-	XMLName         xml.Name       `xml:"http://www.nrf-arts.org/IXRetail/namespace/ POSLog,omitempty" json:"POSLog,omitempty"`
+	Filename         *string        `xml:"Filename,omitempty" json:"Filename,omitempty" db:"filename,omitempty"`
+	RetailStoreID    *int           `xml:"RetailStoreID,omitempty" json:"RetailStoreID,omitempty" db:"retail_store_id,omitempty"`
+	BusinessDayDate  *string        `xml:"BusinessDayDate,omitempty" json:"BusinessDayDate,omitempty" db:"buisness_day_date,omitempty"`
+	TransactionCount *int           `xml:"TransactionCount,omitempty" json:"TransactionCount,omitempty"`
+	XmlnsAcs         *string        `xml:"xmlns acs,attr,omitempty"  json:",omitempty"`
+	XmlnsAcssm       *string        `xml:"xmlns acssm,attr,omitempty"  json:",omitempty"`
+	XmlnsAs          *string        `xml:"xmlns as,attr,omitempty"  json:",omitempty"`
+	XmlnsMsxsl       *string        `xml:"xmlns msxsl,attr,omitempty"  json:",omitempty"`
+	XmlnsPoslog      *string        `xml:"xmlns poslog,attr,omitempty"  json:",omitempty"`
+	XmlnsRaw         *string        `xml:"xmlns raw,attr,omitempty"  json:",omitempty"`
+	Xmlns            *string        `xml:"xmlns,attr,omitempty"  json:",omitempty"`
+	XmlnsXsi         *string        `xml:"xmlns xsi,attr,omitempty"  json:",omitempty"`
+	Transaction      []*Transaction `xml:"http://www.nrf-arts.org/IXRetail/namespace/ Transaction,omitempty" json:"Transaction,omitempty" db:"http://www.nrf-arts.org/IXRetail/namespace/ Transaction,omitempty"`
+	XMLName          xml.Name       `xml:"http://www.nrf-arts.org/IXRetail/namespace/ POSLog,omitempty" json:"POSLog,omitempty"`
 }
 
 // Transaction is the body of POSLog, each action at the POS is a transaction
@@ -54,6 +55,7 @@ type RetailTransaction struct {
 	AttrVersion        *string             `xml:" Version,attr,omitempty"  json:",omitempty"`
 	ItemCount          *int                `xml:"ItemCount,omitempty" json:"ItemCount,omitempty" db:"ItemCount,omitempty"`
 	LineItem           []*LineItem         `xml:"LineItem,omitempty" json:"LineItem,omitempty" db:"LineItem,omitempty"`
+	LineItemCounts     *LineItemCounts     `xml:"LineItemCounts,omitempty" json:"LineItemCounts,omitempty"`
 	PerformanceMetrics *PerformanceMetrics `xml:"PerformanceMetrics,omitempty" json:"PerformanceMetrics,omitempty" db:"PerformanceMetrics,omitempty"`
 	ReceiptDateTime    string              `xml:"ReceiptDateTime,omitempty" json:"ReceiptDateTime,omitempty" db:"ReceiptDateTime,omitempty"`
 	Total              []*Total            `xml:"Total,omitempty" json:"Total,omitempty" db:"Total,omitempty"`
@@ -63,6 +65,8 @@ type RetailTransaction struct {
 }
 
 // LineItem is each line at the register, in order of squence
+// Besides the attributes and sequance number each type is a different type of lineitem
+// to confirm a whole xml has already been inserted we need to summarize each line item
 type LineItem struct {
 	AttrEntryMethod              *string              `xml:" EntryMethod,attr,omitempty"  json:",omitempty"`
 	AttrAcsSpaceKeyedPrice       *string              `xml:"keyedPrice,attr,omitempty"  json:",omitempty"`
@@ -83,6 +87,21 @@ type LineItem struct {
 	Tax                          *Tax                 `xml:"Tax,omitempty" json:"Tax,omitempty" db:"Tax,omitempty"`
 	Tender                       *Tender              `xml:"Tender,omitempty" json:"Tender,omitempty" db:"Tender,omitempty"`
 	XMLName                      xml.Name             `xml:"LineItem,omitempty" json:"LineItem,omitempty"`
+}
+
+// LineItemCounts is the count of each type of lineitem in a POSLog file, used for verfication of data
+type LineItemCounts struct {
+	AgeRestrictionCount      int `xml:"AgeRestrictionCount,omitempty" json:"AgeRestrictionCount,omitempty" db:"AgeRestrictionCount,omitempty"`
+	CRMCustomVariableCount   int `xml:"CRMCustomVariableCount,omitempty" json:"CRMCustomVariableCount,omitempty" db:"CRMCustomVariableCount,omitempty"`
+	CardActivationCount      int `xml:"CardActivationCount,omitempty" json:"CardActivationCount,omitempty" db:"CardActivationCount,omitempty"`
+	ElectronicSignatureCount int `xml:"ElectronicSignatureCount,omitempty" json:"ElectronicSignatureCount,omitempty" db:"ElectronicSignatureCount,omitempty"`
+	ItemNotFoundCount        int `xml:"ItemNotFoundCount,omitempty" json:"ItemNotFoundCount,omitempty" db:"ItemNotFoundCount,omitempty"`
+	ItemRestrictionCount     int `xml:"ItemRestrictionCount,omitempty" json:"ItemRestrictionCount,omitempty" db:"ItemRestrictionCount,omitempty"`
+	LoyaltyMembershipCount   int `xml:"LoyaltyMembershipCount,omitempty" json:"LoyaltyMembershipCount,omitempty" db:"LoyaltyMembershipCount,omitempty"`
+	LoyaltyRewardCount       int `xml:"LoyaltyRewardCount,omitempty" json:"LoyaltyRewardCount,omitempty" db:"LoyaltyRewardCount,omitempty"`
+	SaleCount                int `xml:"SaleCount,omitempty" json:"SaleCount,omitempty" db:"SaleCount,omitempty"`
+	TaxCount                 int `xml:"TaxCount,omitempty" json:"TaxCount,omitempty" db:"TaxCount,omitempty"`
+	TenderCount              int `xml:"TenderCount,omitempty" json:"TenderCount,omitempty" db:"TenderCount,omitempty"`
 }
 
 type Sale struct {
