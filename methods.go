@@ -15,15 +15,15 @@ import (
 // 	}
 // }
 
-func NewPOSLog(trs []*Transaction) (p POSLog) {
+func newPOSLog(trs []*Transaction) (p POSLog) {
 	for _, eachTransaction := range trs {
 		p.Transaction = append(p.Transaction, eachTransaction)
 	}
 	return
 }
 
-// each returns all transactions with information pre processed and appended to type
-func (p *POSLog) each() (trs []*Transaction) {
+// Each returns all transactions with information pre processed and appended to type
+func (p *POSLog) Each() (trs []*Transaction) {
 	if p.Transaction != nil && len(p.Transaction) != 0 {
 		for _, eachTransaction := range p.Transaction {
 			if eachTransaction.RetailTransaction != nil {

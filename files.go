@@ -11,9 +11,9 @@ import (
 	"strings"
 )
 
-// ReadXML takes a POSLog XML file as the argument and returns
+// Read takes a POSLog XML file as the argument and returns
 // a POSLog object
-func ReadXML(filename string) (p POSLog) {
+func Read(filename string) (p POSLog) {
 	byteXML, err := ioutil.ReadFile(filename)
 	if err != nil {
 		log.Println("Problem reading XML File ")
