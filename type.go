@@ -32,6 +32,7 @@ type POSLog struct {
 // Transaction is the body of POSLog, each action at the POS is a transaction
 type Transaction struct {
 	TransactionID      string              `json:"TransactionID" db:"transaction_id"`
+	TransactionCounts  *TransactionCounts  `xml:"TransactionCounts,omitempty" json:"TransactionCounts,omitempty"`
 	BusinessDayDate    string              `xml:"BusinessDayDate" json:"BusinessDayDate" db:"buisness_day_date"`
 	ControlTransaction *ControlTransaction `xml:"ControlTransaction,omitempty" json:"ControlTransaction,omitempty" db:"control_transaction,omitempty"`
 	CurrencyCode       *string             `xml:"CurrencyCode,omitempty" json:"CurrencyCode,omitempty" db:"currency_code,omitempty"`
@@ -55,7 +56,6 @@ type RetailTransaction struct {
 	AttrVersion        *string             `xml:" Version,attr,omitempty"  json:",omitempty"`
 	ItemCount          *int                `xml:"ItemCount,omitempty" json:"ItemCount,omitempty" db:"ItemCount,omitempty"`
 	LineItem           []*LineItem         `xml:"LineItem,omitempty" json:"LineItem,omitempty" db:"LineItem,omitempty"`
-	LineItemCounts     *LineItemCounts     `xml:"LineItemCounts,omitempty" json:"LineItemCounts,omitempty"`
 	PerformanceMetrics *PerformanceMetrics `xml:"PerformanceMetrics,omitempty" json:"PerformanceMetrics,omitempty" db:"PerformanceMetrics,omitempty"`
 	ReceiptDateTime    string              `xml:"ReceiptDateTime,omitempty" json:"ReceiptDateTime,omitempty" db:"ReceiptDateTime,omitempty"`
 	Total              []*Total            `xml:"Total,omitempty" json:"Total,omitempty" db:"Total,omitempty"`
@@ -89,8 +89,8 @@ type LineItem struct {
 	XMLName                      xml.Name             `xml:"LineItem,omitempty" json:"LineItem,omitempty"`
 }
 
-// LineItemCounts is the count of each type of lineitem in a POSLog file, used for verfication of data
-type LineItemCounts struct {
+// TransactionCounts is the count of each type of lineitem in a POSLog file, used for verfication of data
+type TransactionCounts struct {
 	AgeRestrictionCount      int `xml:"AgeRestrictionCount,omitempty" json:"AgeRestrictionCount,omitempty" db:"AgeRestrictionCount,omitempty"`
 	CRMCustomVariableCount   int `xml:"CRMCustomVariableCount,omitempty" json:"CRMCustomVariableCount,omitempty" db:"CRMCustomVariableCount,omitempty"`
 	CardActivationCount      int `xml:"CardActivationCount,omitempty" json:"CardActivationCount,omitempty" db:"CardActivationCount,omitempty"`

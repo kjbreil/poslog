@@ -15,26 +15,6 @@ import (
 // 	}
 // }
 
-func newPOSLog(trs []*Transaction) (p POSLog) {
-	for _, eachTransaction := range trs {
-		p.Transaction = append(p.Transaction, eachTransaction)
-	}
-	return
-}
-
-// Each returns all transactions with information pre processed and appended to type
-func (p *POSLog) Each() (trs []*Transaction) {
-	if p.Transaction != nil && len(p.Transaction) != 0 {
-		for _, eachTransaction := range p.Transaction {
-			if eachTransaction.RetailTransaction != nil {
-				eachTransaction.RetailTransaction.counts()
-				trs = append(trs, eachTransaction)
-			}
-		}
-	}
-	return
-}
-
 // filename is to append the filename to the poslog object
 func (p *POSLog) filename(filename string) {
 	p.Filename = &filename
@@ -78,6 +58,22 @@ func (p *POSLog) buisnessDayDate() (buisnessDayDate *string) {
 
 	p.BusinessDayDate = buisnessDayDate
 	return
+}
+
+func (p *POSLog) counts() {
+	if len(p.Transaction) > 0 {
+		for i := range p.Transaction {
+			p.Transaction[i].counts()
+		}
+	}
+	return
+}
+
+func (tr *Transaction) counts() {
+	if tr.RetailTransaction != nil {
+		tc := tr.RetailTransaction.counts()
+		tr.TransactionCounts = &tc
+	}
 }
 
 // dayid returns an int in dayid format YYYYMMDD
@@ -131,53 +127,44 @@ func (tr *Transaction) id() {
 	return
 }
 
-func (rt *RetailTransaction) counts() {
-	var lineItemCounts LineItemCounts
-	// rt.LineItemCounts.AgeRestrictionCount = 0
-	// rt.LineItemCounts.CRMCustomVariableCount = 0
-	// rt.LineItemCounts.CardActivationCount = 0
-	// rt.LineItemCounts.ElectronicSignatureCount = 0
-	// rt.LineItemCounts.ItemNotFoundCount = 0
-	// rt.LineItemCounts.ItemRestrictionCount = 0
-	// rt.LineItemCounts.LoyaltyMembershipCount = 0
-	// rt.LineItemCounts.LoyaltyRewardCount = 0
-	// rt.LineItemCounts.SaleCount = 0
-	// rt.LineItemCounts.TaxCount = 0
-	// rt.LineItemCounts.TenderCount = 0
+func (rt *RetailTransaction) counts() TransactionCounts {
+	var tc TransactionCounts
+
 	for _, li := range rt.LineItem {
 		if li.AgeRestriction != nil {
-			lineItemCounts.AgeRestrictionCount++
+			tc.AgeRestrictionCount++
 		}
 		if li.CRMCustomVariable != nil {
-			lineItemCounts.CRMCustomVariableCount++
+			tc.CRMCustomVariableCount++
 		}
 		if li.CardActivation != nil {
-			lineItemCounts.CardActivationCount++
+			tc.CardActivationCount++
 		}
 		if li.ElectronicSignature != nil {
-			lineItemCounts.ElectronicSignatureCount++
+			tc.ElectronicSignatureCount++
 		}
 		if li.ItemNotFound != nil {
-			lineItemCounts.ItemNotFoundCount++
+			tc.ItemNotFoundCount++
 		}
 		if li.ItemRestriction != nil {
-			lineItemCounts.ItemRestrictionCount++
+			tc.ItemRestrictionCount++
 		}
 		if li.LoyaltyMembership != nil {
-			lineItemCounts.LoyaltyMembershipCount++
+			tc.LoyaltyMembershipCount++
 		}
 		if li.LoyaltyReward != nil {
-			lineItemCounts.LoyaltyRewardCount++
+			tc.LoyaltyRewardCount++
 		}
 		if li.Sale != nil {
-			lineItemCounts.SaleCount++
+			tc.SaleCount++
 		}
 		if li.Tax != nil {
-			lineItemCounts.TaxCount++
+			tc.TaxCount++
 		}
 		if li.Tender != nil {
-			lineItemCounts.TenderCount++
+			tc.TenderCount++
 		}
 	}
-	rt.LineItemCounts = &lineItemCounts
+
+	return tc
 }
