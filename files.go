@@ -11,6 +11,14 @@ import (
 	"strings"
 )
 
+func (p *POSLog) append(filename string) {
+
+	p.filename(filepath.Base(filename))
+	p.buisnessDayDate()
+	p.storeID()
+	p.counts()
+}
+
 // Read takes a POSLog XML file as the argument and returns
 // a POSLog object
 func Read(filename string) (p POSLog) {
@@ -21,9 +29,7 @@ func Read(filename string) (p POSLog) {
 	}
 	xml.Unmarshal(byteXML, &p)
 
-	p.filename(filepath.Base(filename))
-	p.buisnessDayDate()
-	p.storeID()
+	p.append(filename)
 
 	return
 }
@@ -36,28 +42,9 @@ func importReaderXML(f io.Reader, filename string) (p POSLog) {
 	}
 	xml.Unmarshal(byteXML, &p)
 
-	p.filename(filepath.Base(filename))
-	p.buisnessDayDate()
-	p.storeID()
+	p.append(filename)
 
 	return
-}
-
-// WriteXML writes a POSLog object to an XML file given as first argument
-func (p *POSLog) WriteXML(filename string) {
-	// Drop any other extension and stick a xml on there
-	filename = strings.TrimSuffix(filename, filepath.Ext(filename))
-	filename = filename + ".xml"
-
-	ioutil.WriteFile(filename, createXML(*p), 0666)
-}
-
-func createXML(p POSLog) []byte {
-	xs, err := xml.MarshalIndent(p, "", "    ")
-	if err != nil {
-		fmt.Println(err)
-	}
-	return xs
 }
 
 // ZipReadAllXML Reads all XML from a passed archive
@@ -86,4 +73,21 @@ func ZipReadAllXML(archive string) (ps []POSLog) {
 	}
 
 	return
+}
+
+// WriteXML writes a POSLog object to an XML file given as first argument
+func (p *POSLog) WriteXML(filename string) {
+	// Drop any other extension and stick a xml on there
+	filename = strings.TrimSuffix(filename, filepath.Ext(filename))
+	filename = filename + ".xml"
+
+	ioutil.WriteFile(filename, createXML(*p), 0666)
+}
+
+func createXML(p POSLog) []byte {
+	xs, err := xml.MarshalIndent(p, "", "    ")
+	if err != nil {
+		fmt.Println(err)
+	}
+	return xs
 }
