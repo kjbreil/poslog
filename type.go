@@ -16,7 +16,7 @@ type POSLog struct {
 	Filename         *string        `xml:"Filename,omitempty" json:"Filename,omitempty" db:"filename,omitempty"`
 	RetailStoreID    *int           `xml:"RetailStoreID,omitempty" json:"RetailStoreID,omitempty" db:"retail_store_id,omitempty"`
 	BusinessDayDate  *string        `xml:"BusinessDayDate,omitempty" json:"BusinessDayDate,omitempty" db:"buisness_day_date,omitempty"`
-	TransactionCount *int           `xml:"TransactionCount,omitempty" json:"TransactionCount,omitempty"`
+	TransactionCount *int           `xml:"TransactionCount,omitempty" json:"TransactionCount,omitempty"  db:"transaction_count,omitempty"`
 	XmlnsAcs         *string        `xml:"xmlns acs,attr,omitempty"  json:",omitempty"`
 	XmlnsAcssm       *string        `xml:"xmlns acssm,attr,omitempty"  json:",omitempty"`
 	XmlnsAs          *string        `xml:"xmlns as,attr,omitempty"  json:",omitempty"`
@@ -53,26 +53,33 @@ type OperatorID struct {
 
 // RetailTransaction is any "sale" transaction
 type RetailTransaction struct {
-	AttrVersion        *string             `xml:" Version,attr,omitempty"  json:",omitempty"`
-	ItemCount          *int                `xml:"ItemCount,omitempty" json:"ItemCount,omitempty" db:"ItemCount,omitempty"`
-	LineItem           []*LineItem         `xml:"LineItem,omitempty" json:"LineItem,omitempty" db:"LineItem,omitempty"`
-	PerformanceMetrics *PerformanceMetrics `xml:"PerformanceMetrics,omitempty" json:"PerformanceMetrics,omitempty" db:"PerformanceMetrics,omitempty"`
-	ReceiptDateTime    string              `xml:"ReceiptDateTime,omitempty" json:"ReceiptDateTime,omitempty" db:"ReceiptDateTime,omitempty"`
-	Total              []*Total            `xml:"Total,omitempty" json:"Total,omitempty" db:"Total,omitempty"`
-	TransactionCount   *string             `xml:"TransactionCount,omitempty" json:"TransactionCount,omitempty" db:"TransactionCount,omitempty"`
-	TransactionLink    *TransactionLink    `xml:"TransactionLink,omitempty" json:"TransactionLink,omitempty" db:"TransactionLink,omitempty"`
-	XMLName            xml.Name            `xml:"RetailTransaction,omitempty" json:"RetailTransaction,omitempty"`
+	AttrVersion      *string          `xml:" Version,attr,omitempty"  json:",omitempty" db:"version,omitempty"`
+	LineItem         []*LineItem      `xml:"LineItem,omitempty" json:"LineItem,omitempty"`
+	ReceiptDateTime  string           `xml:"ReceiptDateTime,omitempty" json:"ReceiptDateTime,omitempty" db:"receipt_date_time,omitempty"`
+	Total            []*Total         `xml:"Total,omitempty" json:"Total,omitempty"`
+	TransactionCount *string          `xml:"TransactionCount,omitempty" json:"TransactionCount,omitempty" db:"transaction_count,omitempty"`
+	TransactionLink  *TransactionLink `xml:"TransactionLink,omitempty" json:"TransactionLink,omitempty"`
+	XMLName          xml.Name         `xml:"RetailTransaction,omitempty" json:"RetailTransaction,omitempty"`
+	// namespace ACSIR
+	PerformanceMetrics *PerformanceMetrics `xml:"PerformanceMetrics,omitempty" json:"PerformanceMetrics,omitempty"`
+	ItemCount          *int                `xml:"ItemCount,omitempty" json:"ItemCount,omitempty" db:"item_count,omitempty"`
 }
 
 // LineItem is each line at the register, in order of squence
 // Besides the attributes and sequance number each type is a different type of lineitem
 // to confirm a whole xml has already been inserted we need to summarize each line item
 type LineItem struct {
-	AttrEntryMethod              *string              `xml:" EntryMethod,attr,omitempty"  json:",omitempty"`
+	SequenceNumber  int            `xml:"SequenceNumber" json:"SequenceNumber" db:"SequenceNumber"`
+	AttrEntryMethod *string        `xml:" EntryMethod,attr,omitempty"  json:",omitempty"`
+	AttrVoidFlag    *string        `xml:" VoidFlag,attr,omitempty"  json:",omitempty"`
+	Tax             *Tax           `xml:"Tax,omitempty" json:"Tax,omitempty" db:"Tax,omitempty"`
+	LoyaltyReward   *LoyaltyReward `xml:"LoyaltyReward,omitempty" json:"LoyaltyReward,omitempty" db:"LoyaltyReward,omitempty"`
+	Tender          *Tender        `xml:"Tender,omitempty" json:"Tender,omitempty" db:"Tender,omitempty"`
+	Sale            *Sale          `xml:"Sale,omitempty" json:"Sale,omitempty" db:"Sale,omitempty"`
+	// namespace ACSIR
 	AttrAcsSpaceKeyedPrice       *string              `xml:"keyedPrice,attr,omitempty"  json:",omitempty"`
 	AttrAcsSpaceOperatorOverride *string              `xml:"OperatorOverride,attr,omitempty"  json:",omitempty"`
 	AttrAcsSpacePriceRequired    *string              `xml:"priceRequired,attr,omitempty"  json:",omitempty"`
-	AttrVoidFlag                 *string              `xml:" VoidFlag,attr,omitempty"  json:",omitempty"`
 	AttrAcsSpaceWeightItem       *string              `xml:"weightItem,attr,omitempty"  json:",omitempty"`
 	AgeRestriction               *AgeRestriction      `xml:"AgeRestriction,omitempty" json:"AgeRestriction,omitempty" db:"AgeRestriction,omitempty"`
 	CRMCustomVariable            *CRMCustomVariable   `xml:"CRMCustomVariable,omitempty" json:"CRMCustomVariable,omitempty" db:"CRMCustomVariable,omitempty"`
@@ -81,11 +88,6 @@ type LineItem struct {
 	ItemNotFound                 *ItemNotFound        `xml:"ItemNotFound,omitempty" json:"ItemNotFound,omitempty" db:"ItemNotFound,omitempty"`
 	ItemRestriction              *ItemRestriction     `xml:"ItemRestriction,omitempty" json:"ItemRestriction,omitempty" db:"ItemRestriction,omitempty"`
 	LoyaltyMembership            *LoyaltyMembership   `xml:"LoyaltyMembership,omitempty" json:"LoyaltyMembership,omitempty" db:"LoyaltyMembership,omitempty"`
-	LoyaltyReward                *LoyaltyReward       `xml:"LoyaltyReward,omitempty" json:"LoyaltyReward,omitempty" db:"LoyaltyReward,omitempty"`
-	Sale                         *Sale                `xml:"Sale,omitempty" json:"Sale,omitempty" db:"Sale,omitempty"`
-	SequenceNumber               int                  `xml:"SequenceNumber" json:"SequenceNumber" db:"SequenceNumber"`
-	Tax                          *Tax                 `xml:"Tax,omitempty" json:"Tax,omitempty" db:"Tax,omitempty"`
-	Tender                       *Tender              `xml:"Tender,omitempty" json:"Tender,omitempty" db:"Tender,omitempty"`
 	XMLName                      xml.Name             `xml:"LineItem,omitempty" json:"LineItem,omitempty"`
 }
 
@@ -104,24 +106,27 @@ type TransactionCounts struct {
 	TenderCount              int `xml:"TenderCount,omitempty" json:"TenderCount,omitempty" db:"TenderCount,omitempty"`
 }
 
+// Sale is a line item "sold" item
 type Sale struct {
-	AttrItemType           string                `xml:" ItemType,attr,omitempty"  json:",omitempty"`
-	Description            *string               `xml:"Description,omitempty" json:"Description,omitempty" db:"Description,omitempty"`
-	DiscountAmount         *string               `xml:"DiscountAmount,omitempty" json:"DiscountAmount,omitempty" db:"DiscountAmount,omitempty"`
-	ExtendedAmount         *string               `xml:"ExtendedAmount,omitempty" json:"ExtendedAmount,omitempty" db:"ExtendedAmount,omitempty"`
-	ExtendedDiscountAmount *string               `xml:"ExtendedDiscountAmount,omitempty" json:"ExtendedDiscountAmount,omitempty" db:"ExtendedDiscountAmount,omitempty"`
-	ItemID                 string                `xml:"ItemID,omitempty" json:"ItemID,omitempty" db:"ItemID,omitempty"`
-	Itemizers              *Itemizers            `xml:"Itemizers,omitempty" json:"Itemizers,omitempty" db:"Itemizers,omitempty"`
-	MerchandiseHierarchy   *MerchandiseHierarchy `xml:"MerchandiseHierarchy,omitempty" json:"MerchandiseHierarchy,omitempty" db:"MerchandiseHierarchy,omitempty"`
-	OperatorSequence       *string               `xml:"OperatorSequence,omitempty" json:"OperatorSequence,omitempty" db:"OperatorSequence,omitempty"`
-	POSIdentity            *POSIdentity          `xml:"POSIdentity,omitempty" json:"POSIdentity,omitempty" db:"POSIdentity,omitempty"`
-	Quantity               *string               `xml:"Quantity,omitempty" json:"Quantity,omitempty" db:"Quantity,omitempty"`
-	RegularSalesUnitPrice  *string               `xml:"RegularSalesUnitPrice,omitempty" json:"RegularSalesUnitPrice,omitempty" db:"RegularSalesUnitPrice,omitempty"`
-	ReportCode             *string               `xml:"ReportCode,omitempty" json:"ReportCode,omitempty" db:"ReportCode,omitempty"`
-	SaleableMediaID        *int                  `xml:"SaleableMediaID,omitempty" json:"SaleableMediaID,omitempty" db:"SaleableMediaID,omitempty"`
+	AttrItemType           string                `xml:" ItemType,attr,omitempty"  json:",omitempty" db:"item_type,omitempty"`
+	Description            *string               `xml:"Description,omitempty" json:"Description,omitempty" db:"description,omitempty"`
+	DiscountAmount         *string               `xml:"DiscountAmount,omitempty" json:"DiscountAmount,omitempty" db:"discount_amount,omitempty"`
+	ExtendedAmount         *string               `xml:"ExtendedAmount,omitempty" json:"ExtendedAmount,omitempty" db:"extended_amount,omitempty"`
+	ExtendedDiscountAmount *string               `xml:"ExtendedDiscountAmount,omitempty" json:"ExtendedDiscountAmount,omitempty" db:"extended_discount_amount,omitempty"`
+	ItemID                 string                `xml:"ItemID,omitempty" json:"ItemID,omitempty" db:"item_id,omitempty"`
+	MerchandiseHierarchy   *MerchandiseHierarchy `xml:"MerchandiseHierarchy,omitempty" json:"MerchandiseHierarchy,omitempty"`
+	POSIdentity            *POSIdentity          `xml:"POSIdentity,omitempty" json:"POSIdentity,omitempty"`
+	Quantity               *string               `xml:"Quantity,omitempty" json:"Quantity,omitempty" db:"quantity,omitempty"`
+	RegularSalesUnitPrice  *string               `xml:"RegularSalesUnitPrice,omitempty" json:"RegularSalesUnitPrice,omitempty" db:"regular_sale_unit_price,omitempty"`
 	XMLName                xml.Name              `xml:"Sale,omitempty" json:"Sale,omitempty"`
+	// namespace ACS-IR
+	OperatorSequence *string    `xml:"OperatorSequence,omitempty" json:"OperatorSequence,omitempty" db:"OperatorSequence,omitempty"`
+	ReportCode       *string    `xml:"ReportCode,omitempty" json:"ReportCode,omitempty" db:"ReportCode,omitempty"`
+	SaleableMediaID  *int       `xml:"SaleableMediaID,omitempty" json:"SaleableMediaID,omitempty" db:"SaleableMediaID,omitempty"`
+	Itemizers        *Itemizers `xml:"Itemizers,omitempty" json:"Itemizers,omitempty" db:"Itemizers,omitempty"`
 }
 
+// POSIdentity contains basic item information, UPC and department as the itemID and Qualifier
 type POSIdentity struct {
 	AttrPOSIDType string   `xml:"POSIDType,attr"  json:",omitempty"`
 	POSItemID     *int     `xml:"POSItemID,omitempty" json:"POSItemID,omitempty" db:"POSItemID,omitempty"`
@@ -129,36 +134,33 @@ type POSIdentity struct {
 	XMLName       xml.Name `xml:"POSIdentity,omitempty" json:"POSIdentity,omitempty"`
 }
 
+// MerchandiseHierarchy is the merchandising department of an item
 type MerchandiseHierarchy struct {
-	AttrAcsSpaceDepartmentDescription string   `xml:"DepartmentDescription,attr"  json:",omitempty"`
-	AttrLevel                         string   `xml:" Level,attr"  json:",omitempty"`
-	Text                              string   `xml:",chardata" json:",omitempty"`
-	XMLName                           xml.Name `xml:"MerchandiseHierarchy,omitempty" json:"MerchandiseHierarchy,omitempty"`
+	AttrLevel string   `xml:" Level,attr"  json:",omitempty" db:"level,omitempty"`
+	Text      string   `xml:",chardata" json:",omitempty" db:"text,omitempty"`
+	XMLName   xml.Name `xml:"MerchandiseHierarchy,omitempty" json:"MerchandiseHierarchy,omitempty"`
+	// namespace ACSIR
+	AttrAcsSpaceDepartmentDescription string `xml:"DepartmentDescription,attr"  json:",omitempty"`
 }
 
-type Itemizers struct {
-	AttrFoodStampable string `xml:" FoodStampable,attr"  json:",omitempty"`
-	AttrItemizer1     string `xml:" Itemizer1,attr"  json:",omitempty"`
-	AttrItemizer2     string `xml:" Itemizer2,attr"  json:",omitempty"`
-	AttrTax1          string `xml:" Tax1,attr"  json:",omitempty"`
-	Itemizers         string `xml:",chardata" json:",omitempty"`
-}
-
+// Tender is information about the tender amount(s) and type(s)
 type Tender struct {
-	AttrAcsSpaceTenderDescription string         `xml:"TenderDescription,attr"  json:",omitempty"`
-	AttrTenderType                string         `xml:" TenderType,attr"  json:",omitempty"`
-	AttrTypeCode                  string         `xml:" TypeCode,attr"  json:",omitempty"`
-	Amount                        *string        `xml:"Amount,omitempty" json:"Amount,omitempty" db:"Amount,omitempty"`
-	Authorization                 *Authorization `xml:"Authorization,omitempty" json:"Authorization,omitempty" db:"Authorization,omitempty"`
-	Cashback                      *string        `xml:"Cashback,omitempty" json:"Cashback,omitempty" db:"Cashback,omitempty"`
-	Coupon                        *Coupon        `xml:"Coupon,omitempty" json:"Coupon,omitempty" db:"Coupon,omitempty"`
-	CreditDebit                   *CreditDebit   `xml:"CreditDebit,omitempty" json:"CreditDebit,omitempty" db:"CreditDebit,omitempty"`
-	OperatorSequence              *int           `xml:"OperatorSequence,omitempty" json:"OperatorSequence,omitempty" db:"OperatorSequence,omitempty"`
-	TenderChange                  *TenderChange  `xml:"TenderChange,omitempty" json:"TenderChange,omitempty" db:"TenderChange,omitempty"`
-	TenderID                      *int           `xml:"TenderID,omitempty" json:"TenderID,omitempty" db:"TenderID,omitempty"`
-	XMLName                       xml.Name       `xml:"Tender,omitempty" json:"Tender,omitempty"`
+	AttrTenderType string         `xml:" TenderType,attr"  json:",omitempty" db:"tender_type,omitempty"`
+	AttrTypeCode   string         `xml:" TypeCode,attr"  json:",omitempty" db:"type_code,omitempty"`
+	Amount         *string        `xml:"Amount,omitempty" json:"Amount,omitempty" db:"amount,omitempty"`
+	Authorization  *Authorization `xml:"Authorization,omitempty" json:"authorization,omitempty"`
+	Cashback       *string        `xml:"Cashback,omitempty" json:"Cashback,omitempty" db:"cashback,omitempty"`
+	Coupon         *Coupon        `xml:"Coupon,omitempty" json:"Coupon,omitempty"`
+	CreditDebit    *CreditDebit   `xml:"CreditDebit,omitempty" json:"CreditDebit,omitempty"`
+	TenderChange   *TenderChange  `xml:"TenderChange,omitempty" json:"TenderChange,omitempty"`
+	TenderID       *int           `xml:"TenderID,omitempty" json:"TenderID,omitempty" db:"TenderID,omitempty"`
+	XMLName        xml.Name       `xml:"Tender,omitempty" json:"Tender,omitempty"`
+	// namespace ACS-IR
+	OperatorSequence              *int   `xml:"OperatorSequence,omitempty" json:"OperatorSequence,omitempty" db:"OperatorSequence,omitempty"`
+	AttrAcsSpaceTenderDescription string `xml:"TenderDescription,attr"  json:",omitempty"`
 }
 
+// Authorization is the data returned after credit/debit authorization
 type Authorization struct {
 	AttrElectronicSignature string   `xml:" ElectronicSignature,attr"  json:",omitempty"`
 	AttrHostAuthorized      string   `xml:" HostAuthorized,attr"  json:",omitempty"`
@@ -170,29 +172,32 @@ type Authorization struct {
 	XMLName                 xml.Name `xml:"Authorization,omitempty" json:"Authorization,omitempty"`
 }
 
+// Credit Debit is just a flag of if the transaction is a credit or debit transaciton
 type CreditDebit struct {
-	AttrCardType                  string   `xml:" CardType,attr"  json:",omitempty"`
+	AttrCardType string `xml:" CardType,attr"  json:",omitempty"`
+	// namespace ACSIR
 	AttrAcsSpaceCreditDescription string   `xml:"CreditDescription,attr"  json:",omitempty"`
 	XMLName                       xml.Name `xml:"CreditDebit,omitempty" json:"CreditDebit,omitempty"`
 }
 
 type LoyaltyReward struct {
+	PromotionID *int     `xml:"PromotionID,omitempty" json:"PromotionID,omitempty" db:"PromotionID,omitempty"`
+	EventID     *int     `xml:"EventID,omitempty" json:"EventID,omitempty" db:"EventID,omitempty"`
+	ReasonCode  *string  `xml:"ReasonCode,omitempty" json:"ReasonCode,omitempty" db:"ReasonCode,omitempty"`
+	XMLName     xml.Name `xml:"LoyaltyReward,omitempty" json:"LoyaltyReward,omitempty"`
+	// namespace ACS-IR
+	ExtendedRewardAmount           *string                    `xml:"ExtendedRewardAmount,omitempty" json:"ExtendedRewardAmount,omitempty" db:"ExtendedRewardAmount,omitempty"`
+	Itemizers                      *Itemizers                 `xml:"Itemizers,omitempty" json:"Itemizers,omitempty" db:"Itemizers,omitempty"`
+	OperatorSequenceReference      *OperatorSequenceReference `xml:"OperatorSequenceReference,omitempty" json:"OperatorSequenceReference,omitempty" db:"OperatorSequenceReference,omitempty"`
+	RewardBasis                    *RewardBasis               `xml:"RewardBasis,omitempty" json:"RewardBasis,omitempty" db:"RewardBasis,omitempty"`
+	RewardCategory                 *string                    `xml:"RewardCategory,omitempty" json:"RewardCategory,omitempty" db:"RewardCategory,omitempty"`
+	RewardType                     *string                    `xml:"RewardType,omitempty" json:"RewardType,omitempty" db:"RewardType,omitempty"`
+	RewardLevel                    *string                    `xml:"RewardLevel,omitempty" json:"RewardLevel,omitempty" db:"RewardLevel,omitempty"`
 	AttrAcsSpaceDetailedData       string                     `xml:"detailedData,attr"  json:",omitempty"`
 	AttrAcsSpaceMembershipRequired string                     `xml:"membershipRequired,attr"  json:",omitempty"`
 	AttrAcsSpaceSummarizedActivity string                     `xml:"summarizedActivity,attr"  json:",omitempty"`
 	BaseRewardAmount               *string                    `xml:"BaseRewardAmount,omitempty" json:"BaseRewardAmount,omitempty" db:"BaseRewardAmount,omitempty"`
 	CustomOfferID                  *int                       `xml:"CustomOfferID,omitempty" json:"CustomOfferID,omitempty" db:"CustomOfferID,omitempty"`
-	EventID                        *int                       `xml:"EventID,omitempty" json:"EventID,omitempty" db:"EventID,omitempty"`
-	ExtendedRewardAmount           *string                    `xml:"ExtendedRewardAmount,omitempty" json:"ExtendedRewardAmount,omitempty" db:"ExtendedRewardAmount,omitempty"`
-	Itemizers                      *Itemizers                 `xml:"Itemizers,omitempty" json:"Itemizers,omitempty" db:"Itemizers,omitempty"`
-	OperatorSequenceReference      *OperatorSequenceReference `xml:"OperatorSequenceReference,omitempty" json:"OperatorSequenceReference,omitempty" db:"OperatorSequenceReference,omitempty"`
-	PromotionID                    *int                       `xml:"PromotionID,omitempty" json:"PromotionID,omitempty" db:"PromotionID,omitempty"`
-	ReasonCode                     *string                    `xml:"ReasonCode,omitempty" json:"ReasonCode,omitempty" db:"ReasonCode,omitempty"`
-	RewardBasis                    *RewardBasis               `xml:"RewardBasis,omitempty" json:"RewardBasis,omitempty" db:"RewardBasis,omitempty"`
-	RewardCategory                 *string                    `xml:"RewardCategory,omitempty" json:"RewardCategory,omitempty" db:"RewardCategory,omitempty"`
-	RewardLevel                    *string                    `xml:"RewardLevel,omitempty" json:"RewardLevel,omitempty" db:"RewardLevel,omitempty"`
-	RewardType                     *string                    `xml:"RewardType,omitempty" json:"RewardType,omitempty" db:"RewardType,omitempty"`
-	XMLName                        xml.Name                   `xml:"LoyaltyReward,omitempty" json:"LoyaltyReward,omitempty"`
 }
 
 type RewardBasis struct {
@@ -209,40 +214,25 @@ type RewardBasis struct {
 type OperatorSequenceReference string
 
 type Total struct {
-	AttrTotalType string   `xml:" TotalType,attr"  json:",omitempty"`
-	Text          string   `xml:",chardata" json:",omitempty"`
+	AttrTotalType string   `xml:" TotalType,attr"  json:",omitempty" db:"total_type,omitempty"`
+	Text          string   `xml:",chardata" json:",omitempty" db:"text,omitempty"`
 	XMLName       xml.Name `xml:"Total,omitempty" json:"Total,omitempty"`
 }
 
-type PerformanceMetrics struct {
-	IdleTime   *string  `xml:"IdleTime,omitempty" json:"IdleTime,omitempty" db:"IdleTime,omitempty"`
-	RingTime   *string  `xml:"RingTime,omitempty" json:"RingTime,omitempty" db:"RingTime,omitempty"`
-	TenderTime *string  `xml:"TenderTime,omitempty" json:"TenderTime,omitempty" db:"TenderTime,omitempty"`
-	XMLName    xml.Name `xml:"PerformanceMetrics,omitempty" json:"PerformanceMetrics,omitempty"`
-}
-
 type Tax struct {
-	AttrAcsSpaceTaxDescription string   `xml:"TaxDescription,attr"  json:",omitempty"`
-	AttrAcsSpaceTaxID          string   `xml:"TaxID,attr"  json:",omitempty"`
-	Amount                     *string  `xml:"Amount,omitempty" json:"Amount,omitempty" db:"Amount,omitempty"`
-	Percent                    *string  `xml:"Percent,omitempty" json:"Percent,omitempty" db:"Percent,omitempty"`
-	Reason                     *string  `xml:"Reason,omitempty" json:"Reason,omitempty" db:"Reason,omitempty"`
-	TaxableAmount              *string  `xml:"TaxableAmount,omitempty" json:"TaxableAmount,omitempty" db:"TaxableAmount,omitempty"`
-	XMLName                    xml.Name `xml:"Tax,omitempty" json:"Tax,omitempty"`
+	Amount        *string  `xml:"Amount,omitempty" json:"Amount,omitempty" db:"Amount,omitempty"`
+	Percent       *string  `xml:"Percent,omitempty" json:"Percent,omitempty" db:"Percent,omitempty"`
+	Reason        *string  `xml:"Reason,omitempty" json:"Reason,omitempty" db:"Reason,omitempty"`
+	TaxableAmount *string  `xml:"TaxableAmount,omitempty" json:"TaxableAmount,omitempty" db:"TaxableAmount,omitempty"`
+	XMLName       xml.Name `xml:"Tax,omitempty" json:"Tax,omitempty"`
+	// namespace ACS-IR
+	AttrAcsSpaceTaxDescription string `xml:"TaxDescription,attr"  json:",omitempty"`
+	AttrAcsSpaceTaxID          string `xml:"TaxID,attr"  json:",omitempty"`
 }
 
 type ElectronicSignature struct {
 	Svg     *Svg     `xml:"svg,omitempty" json:"svg,omitempty" db:"svg,omitempty"`
 	XMLName xml.Name `xml:"ElectronicSignature,omitempty" json:"ElectronicSignature,omitempty"`
-}
-
-type Svg struct {
-	AttrHeight string   `xml:" height,attr"  json:",omitempty"`
-	AttrStyle  string   `xml:" style,attr"  json:",omitempty"`
-	AttrWidth  string   `xml:" width,attr"  json:",omitempty"`
-	AttrXmlns  string   `xml:" xmlns,attr"  json:",omitempty"`
-	Path       []*Path  `xml:"path,omitempty" json:"path,omitempty" db:"path,omitempty"`
-	XMLName    xml.Name `xml:"svg,omitempty" json:"svg,omitempty"`
 }
 
 type Path struct {
@@ -271,20 +261,23 @@ type CRMCustomVariable struct {
 	XMLName xml.Name `xml:"CRMCustomVariable,omitempty" json:"CRMCustomVariable,omitempty"`
 }
 
+// Coupon is a MFG Coupon
 type Coupon struct {
 	AttrCouponType string        `xml:" CouponType,attr"  json:",omitempty"`
 	ExpirationDate *string       `xml:"ExpirationDate,omitempty" json:"ExpirationDate,omitempty" db:"ExpirationDate,omitempty"`
-	Item           *Item         `xml:"Item,omitempty" json:"Item,omitempty" db:"Item,omitempty"`
 	PrimaryLabel   *PrimaryLabel `xml:"PrimaryLabel,omitempty" json:"PrimaryLabel,omitempty" db:"PrimaryLabel,omitempty"`
 	Quantity       *string       `xml:"Quantity,omitempty" json:"Quantity,omitempty" db:"Quantity,omitempty"`
 	ScanCode       *string       `xml:"ScanCode,omitempty" json:"ScanCode,omitempty" db:"ScanCode,omitempty"`
 	XMLName        xml.Name      `xml:"Coupon,omitempty" json:"Coupon,omitempty"`
+	// namespace ACSIR
+	Item *Item `xml:"Item,omitempty" json:"Item,omitempty" db:"Item,omitempty"`
 }
 
 type PrimaryLabel struct {
 	XMLName xml.Name `xml:"PrimaryLabel,omitempty" json:"PrimaryLabel,omitempty"`
 }
 
+// Item is a PLU item
 type Item struct {
 	AttrItemType           string                `xml:" ItemType,attr"  json:",omitempty"`
 	Description            *string               `xml:"Description,omitempty" json:"Description,omitempty" db:"Description,omitempty"`
@@ -321,6 +314,7 @@ type CardActivation struct {
 	XMLName        xml.Name `xml:"CardActivation,omitempty" json:"CardActivation,omitempty"`
 }
 
+// TenderChange is amount given back on tenders that allow change
 type TenderChange struct {
 	Amount  *string  `xml:"Amount,omitempty" json:"Amount,omitempty" db:"Amount,omitempty"`
 	XMLName xml.Name `xml:"TenderChange,omitempty" json:"TenderChange,omitempty"`

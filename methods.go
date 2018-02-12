@@ -168,3 +168,41 @@ func (rt *RetailTransaction) counts() TransactionCounts {
 
 	return tc
 }
+
+// Type returns a string of the line item
+func (li *LineItem) Type() string {
+	if li.AgeRestriction != nil {
+		return "AgeRestriction"
+	}
+	if li.CRMCustomVariable != nil {
+		return "CRMCustomVariable"
+	}
+	if li.CardActivation != nil {
+		return "CardActivation"
+	}
+	if li.ElectronicSignature != nil {
+		return "ElectronicSignature"
+	}
+	if li.ItemNotFound != nil {
+		return "ItemNotFound"
+	}
+	if li.ItemRestriction != nil {
+		return "ItemRestriction"
+	}
+	if li.LoyaltyMembership != nil {
+		return "LoyaltyMembership"
+	}
+	if li.LoyaltyReward != nil {
+		return "LoyaltyReward"
+	}
+	if li.Sale != nil {
+		return "Sale"
+	}
+	if li.Tax != nil {
+		return "Tax"
+	}
+	if li.Tender != nil {
+		return "Tender"
+	}
+	return "UNKOWN"
+}
