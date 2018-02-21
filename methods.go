@@ -24,7 +24,7 @@ func (p *POSLog) filename(filename string) {
 // with the poslog xml file
 func (p *POSLog) storeID() (storeID int) {
 	if len(p.Transaction) == 0 {
-		log.Println("No store id in ", &p.Filename)
+		// log.Printf("No store id in: %s", *p.Filename)
 		storeID = 0
 		return
 	}
@@ -43,7 +43,7 @@ func (p *POSLog) storeID() (storeID int) {
 // buisnessDayDate returns the buisness date of all transactions in a poslog file, all transactions in a poslog file should have SAME buisness date
 func (p *POSLog) buisnessDayDate() (buisnessDayDate *string) {
 	if len(p.Transaction) == 0 {
-		log.Println("No bid in ", p.Filename)
+		// log.Printf("No bid in: %s", *p.Filename)
 		return
 	}
 
