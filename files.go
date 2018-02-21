@@ -11,7 +11,7 @@ import (
 	"strings"
 )
 
-func (p *POSLog) append(filename string) {
+func (p *POSLog) pAppend(filename string) {
 
 	p.filename(filepath.Base(filename))
 	p.buisnessDayDate()
@@ -29,7 +29,7 @@ func Read(filename string) (p POSLog) {
 	}
 	xml.Unmarshal(byteXML, &p)
 
-	p.append(filename)
+	p.pAppend(filename)
 
 	return
 }
@@ -42,7 +42,7 @@ func importReaderXML(f io.Reader, filename string) (p POSLog) {
 	}
 	xml.Unmarshal(byteXML, &p)
 
-	p.append(filename)
+	p.pAppend(filename)
 
 	return
 }

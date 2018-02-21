@@ -44,7 +44,6 @@ func (p *POSLog) storeID() (storeID int) {
 func (p *POSLog) buisnessDayDate() (buisnessDayDate *string) {
 	if len(p.Transaction) == 0 {
 		log.Println("No bid in ", p.Filename)
-		*buisnessDayDate = "0"
 		return
 	}
 
@@ -64,6 +63,7 @@ func (p *POSLog) counts() {
 	if len(p.Transaction) > 0 {
 		for i := range p.Transaction {
 			p.Transaction[i].counts()
+			p.Transaction[i].id()
 		}
 	}
 	return
@@ -98,13 +98,13 @@ func (tr *Transaction) dayid() (dayid *string) {
 }
 
 // End returns an int of the transaction end datetime
-func (tr *Transaction) end() (endstring *string) {
-	time, err := time.Parse(time.RFC3339, tr.BusinessDayDate)
+func (tr *Transaction) end() (endstring string) {
+	tm, err := time.Parse("2006-01-02T15:04:05", tr.EndDateTime)
 	if err != nil {
 		log.Fatalln(err)
 	}
 	format := "20060102150405"
-	*endstring = time.Format(format)
+	endstring = tm.Format(format)
 	return
 }
 
@@ -112,7 +112,7 @@ func (tr *Transaction) end() (endstring *string) {
 func (tr *Transaction) id() {
 	var tida []string
 	// first is the enddateint, good for sorting
-	tida = append(tida, string(*tr.end()))
+	tida = append(tida, string(tr.end()))
 	// next the dayid, this is buisness date
 	tida = append(tida, string(*tr.dayid()))
 	// next store number
