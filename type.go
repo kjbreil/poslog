@@ -136,8 +136,8 @@ type POSIdentity struct {
 
 // MerchandiseHierarchy is the merchandising department of an item
 type MerchandiseHierarchy struct {
-	AttrLevel string   `xml:" Level,attr"  json:",omitempty" db:"level,omitempty"`
-	Text      string   `xml:",chardata" json:",omitempty" db:"text,omitempty"`
+	AttrLevel string   `xml:" Level,attr"  json:",omitempty" db:"level_name,omitempty"`
+	Text      string   `xml:",chardata" json:",omitempty" db:"level,omitempty"`
 	XMLName   xml.Name `xml:"MerchandiseHierarchy,omitempty" json:"MerchandiseHierarchy,omitempty"`
 	// namespace ACSIR
 	AttrAcsSpaceDepartmentDescription string `xml:"DepartmentDescription,attr"  json:",omitempty"`
