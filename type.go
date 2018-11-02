@@ -48,12 +48,12 @@ type Transaction struct {
 // OperatorID is the name and into of operator
 type OperatorID struct {
 	OperatorID   int    `xml:",chardata" json:"OperatorID,omitempty" db:"operator_id,omitempty"`
-	OperatorName string `xml:" OperatorName,attr,omitempty"  json:"operator_name,omitempty"`
+	OperatorName string `xml:"OperatorName,attr,omitempty"  json:"operator_name,omitempty"`
 }
 
 // RetailTransaction is any "sale" transaction
 type RetailTransaction struct {
-	AttrVersion      *string          `xml:" Version,attr,omitempty"  json:",omitempty" db:"version,omitempty"`
+	AttrVersion      *string          `xml:"Version,attr,omitempty"  json:",omitempty" db:"version,omitempty"`
 	LineItem         []*LineItem      `xml:"LineItem,omitempty" json:"LineItem,omitempty"`
 	ReceiptDateTime  string           `xml:"ReceiptDateTime,omitempty" json:"ReceiptDateTime,omitempty" db:"receipt_date_time,omitempty"`
 	Total            []*Total         `xml:"Total,omitempty" json:"Total,omitempty"`
@@ -70,8 +70,8 @@ type RetailTransaction struct {
 // to confirm a whole xml has already been inserted we need to summarize each line item
 type LineItem struct {
 	SequenceNumber  int            `xml:"SequenceNumber" json:"SequenceNumber" db:"SequenceNumber"`
-	AttrEntryMethod *string        `xml:" EntryMethod,attr,omitempty"  json:",omitempty"`
-	AttrVoidFlag    *string        `xml:" VoidFlag,attr,omitempty"  json:",omitempty"`
+	AttrEntryMethod *string        `xml:"EntryMethod,attr,omitempty"  json:",omitempty"`
+	AttrVoidFlag    *string        `xml:"VoidFlag,attr,omitempty"  json:",omitempty"`
 	Tax             *Tax           `xml:"Tax,omitempty" json:"Tax,omitempty" db:"Tax,omitempty"`
 	LoyaltyReward   *LoyaltyReward `xml:"LoyaltyReward,omitempty" json:"LoyaltyReward,omitempty" db:"LoyaltyReward,omitempty"`
 	Tender          *Tender        `xml:"Tender,omitempty" json:"Tender,omitempty" db:"Tender,omitempty"`
@@ -108,7 +108,7 @@ type TransactionCounts struct {
 
 // Sale is a line item "sold" item
 type Sale struct {
-	AttrItemType           string                `xml:" ItemType,attr,omitempty"  json:",omitempty" db:"item_type,omitempty"`
+	AttrItemType           string                `xml:"ItemType,attr,omitempty"  json:",omitempty" db:"item_type,omitempty"`
 	Description            *string               `xml:"Description,omitempty" json:"Description,omitempty" db:"description,omitempty"`
 	DiscountAmount         *string               `xml:"DiscountAmount,omitempty" json:"DiscountAmount,omitempty" db:"discount_amount,omitempty"`
 	ExtendedAmount         *string               `xml:"ExtendedAmount,omitempty" json:"ExtendedAmount,omitempty" db:"extended_amount,omitempty"`
