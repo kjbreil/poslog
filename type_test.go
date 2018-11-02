@@ -9,6 +9,6 @@ import "testing"
 
 func TestPOSLog(t *testing.T) {
 	// data := ImportXML("./input/xml/POSLog-201612301530-54.xml")
-	data := Read("./sample/POSLog.xml")
+	data, _ := Read("./sample/POSLog.xml")
 	data.WriteXML("./output/TestOut.xml")
 }
