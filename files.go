@@ -21,11 +21,10 @@ func (p *POSLog) pAppend(filename string) {
 
 // Read takes a POSLog XML file as the argument and returns
 // a POSLog object
-func Read(filename string) (p POSLog) {
+func Read(filename string) (p POSLog, err error) {
 	byteXML, err := ioutil.ReadFile(filename)
 	if err != nil {
-		log.Println("Problem reading XML File ")
-		log.Println(err)
+		return p, fmt.Errorf("problem reading XML File with error: %v", err)
 	}
 	xml.Unmarshal(byteXML, &p)
 
