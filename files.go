@@ -47,12 +47,11 @@ func importReaderXML(f io.Reader, filename string) (p POSLog) {
 }
 
 // ZipReadAllXML Reads all XML from a passed archive
-func ZipReadAllXML(archive string) (ps []POSLog) {
+func ZipReadAllXML(archive string) (ps []POSLog, err error) {
 
 	reader, err := zip.OpenReader(archive)
 	if err != nil {
-		log.Println("Could not open the zip archive for some reason")
-		log.Println(archive)
+		return nil, fmt.Errorf("Could not open the zip archive for some reason: %s - %v", archive, err)
 	}
 
 	for _, file := range reader.File {
@@ -61,7 +60,7 @@ func ZipReadAllXML(archive string) (ps []POSLog) {
 		if ext == ".xml" {
 			fileReader, err := file.Open()
 			if err != nil {
-				fmt.Println("ERRUR")
+				return nil, err
 			}
 			defer fileReader.Close()
 
