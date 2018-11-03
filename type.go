@@ -241,9 +241,9 @@ type Path struct {
 }
 
 type LoyaltyMembership struct {
-	HouseholdID     *int       `xml:"HouseholdID,omitempty" json:"HouseholdID,omitempty" db:"HouseholdID,omitempty"`
+	HouseholdID     *int64     `xml:"HouseholdID,omitempty" json:"HouseholdID,omitempty" db:"HouseholdID,omitempty"`
 	LoyaltyID       *LoyaltyID `xml:"LoyaltyID,omitempty" json:"LoyaltyID,omitempty" db:"LoyaltyID,omitempty"`
-	MembershipID    *int       `xml:"MembershipID,omitempty" json:"MembershipID,omitempty" db:"MembershipID,omitempty"`
+	MembershipID    *int64     `xml:"MembershipID,omitempty" json:"MembershipID,omitempty" db:"MembershipID,omitempty"`
 	MembershipLevel *string    `xml:"MembershipLevel,omitempty" json:"MembershipLevel,omitempty" db:"MembershipLevel,omitempty"`
 	XMLName         xml.Name   `xml:"LoyaltyMembership,omitempty" json:"LoyaltyMembership,omitempty"`
 }
