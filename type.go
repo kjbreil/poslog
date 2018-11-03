@@ -6,7 +6,6 @@ package poslog
 
 import (
 	"encoding/xml"
-	"math/big"
 )
 
 // POSLog the main type of a POSLog XMl file. The type contains
@@ -130,7 +129,7 @@ type Sale struct {
 // POSIdentity contains basic item information, UPC and department as the itemID and Qualifier
 type POSIdentity struct {
 	AttrPOSIDType string   `xml:"POSIDType,attr"  json:",omitempty"`
-	POSItemID     *big.Int `xml:"POSItemID,omitempty" json:"POSItemID,omitempty" db:"POSItemID,omitempty"`
+	POSItemID     *int64   `xml:"POSItemID,omitempty" json:"POSItemID,omitempty" db:"POSItemID,omitempty"`
 	Qualifier     *string  `xml:"Qualifier,omitempty" json:"Qualifier,omitempty" db:"Qualifier,omitempty"`
 	XMLName       xml.Name `xml:"POSIdentity,omitempty" json:"POSIdentity,omitempty"`
 }
