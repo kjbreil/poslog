@@ -9,9 +9,12 @@ import "testing"
 
 func TestPOSLog(t *testing.T) {
 	// data := ImportXML("./input/xml/POSLog-201612301530-54.xml")
-	// data, _ := Read("./sample/POSLog.xml")
-	// data.WriteXML("./output/TestOut.xml")
-	data, _ := ZipReadAllXML("./sample/matching1.zip")
-	t.Log(len(data))
-	t.Fail()
+	data, err := Read("./sample/POSLog.xml")
+	if err != nil {
+		t.Fatal(err)
+	}
+	data.WriteXML("./output/TestOut.xml")
+	// data, _ := ZipReadAllXML("./sample/matching1.zip")
+	// t.Log(len(data))
+	// t.Fail()
 }

@@ -153,7 +153,7 @@ type Tender struct {
 	Coupon         *Coupon        `xml:"Coupon,omitempty" json:"Coupon,omitempty"`
 	CreditDebit    *CreditDebit   `xml:"CreditDebit,omitempty" json:"CreditDebit,omitempty"`
 	TenderChange   *TenderChange  `xml:"TenderChange,omitempty" json:"TenderChange,omitempty"`
-	TenderID       *int           `xml:"TenderID,omitempty" json:"TenderID,omitempty" db:"TenderID,omitempty"`
+	TenderID       *string        `xml:"TenderID,omitempty" json:"TenderID,omitempty" db:"TenderID,omitempty"`
 	XMLName        xml.Name       `xml:"Tender,omitempty" json:"Tender,omitempty"`
 	// namespace ACS-IR
 	OperatorSequence              *int   `xml:"OperatorSequence,omitempty" json:"OperatorSequence,omitempty" db:"OperatorSequence,omitempty"`

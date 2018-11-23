@@ -27,7 +27,11 @@ func Read(filename string) (p POSLog, err error) {
 	if err != nil {
 		return p, fmt.Errorf("problem reading XML File with error: %v", err)
 	}
-	xml.Unmarshal(byteXML, &p)
+	err = xml.Unmarshal(byteXML, &p)
+
+	if err != nil {
+		return p, fmt.Errorf("XML unmarshal error: %v", err)
+	}
 
 	p.pAppend(filename)
 
