@@ -7,6 +7,7 @@ import (
 	"io"
 	"io/ioutil"
 	"log"
+	"os"
 	"path/filepath"
 	"strings"
 )
@@ -48,6 +49,10 @@ func importReaderXML(f io.Reader, filename string) (p POSLog) {
 
 // ZipReadAllXML Reads all XML from a passed archive
 func ZipReadAllXML(archive string) (ps []POSLog, err error) {
+
+	if _, err := os.Stat(archive); os.IsNotExist(err) {
+		return nil, fmt.Errorf("Archive does not exist: %s - %v", archive, err)
+	}
 
 	reader, err := zip.OpenReader(archive)
 	if err != nil {
