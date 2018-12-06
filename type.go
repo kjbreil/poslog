@@ -53,13 +53,14 @@ type OperatorID struct {
 
 // RetailTransaction is any "sale" transaction
 type RetailTransaction struct {
-	AttrVersion      *string          `xml:"Version,attr,omitempty"  json:",omitempty" db:"version,omitempty"`
-	LineItem         []*LineItem      `xml:"LineItem,omitempty" json:"LineItem,omitempty"`
-	ReceiptDateTime  string           `xml:"ReceiptDateTime,omitempty" json:"ReceiptDateTime,omitempty" db:"receipt_date_time,omitempty"`
-	Total            []*Total         `xml:"Total,omitempty" json:"Total,omitempty"`
-	TransactionCount *string          `xml:"TransactionCount,omitempty" json:"TransactionCount,omitempty" db:"transaction_count,omitempty"`
-	TransactionLink  *TransactionLink `xml:"TransactionLink,omitempty" json:"TransactionLink,omitempty"`
-	XMLName          xml.Name         `xml:"RetailTransaction,omitempty" json:"RetailTransaction,omitempty"`
+	AttrVersion           *string          `xml:"Version,attr,omitempty"  json:",omitempty" db:"version,omitempty"`
+	AttrTransactionStatus *string          `xml:"TransactionStatus,attr,omitempty"  json:",omitempty" db:"transaction_status,omitempty"`
+	LineItem              []*LineItem      `xml:"LineItem,omitempty" json:"LineItem,omitempty"`
+	ReceiptDateTime       string           `xml:"ReceiptDateTime,omitempty" json:"ReceiptDateTime,omitempty" db:"receipt_date_time,omitempty"`
+	Total                 []*Total         `xml:"Total,omitempty" json:"Total,omitempty"`
+	TransactionCount      *string          `xml:"TransactionCount,omitempty" json:"TransactionCount,omitempty" db:"transaction_count,omitempty"`
+	TransactionLink       *TransactionLink `xml:"TransactionLink,omitempty" json:"TransactionLink,omitempty"`
+	XMLName               xml.Name         `xml:"RetailTransaction,omitempty" json:"RetailTransaction,omitempty"`
 	// namespace ACSIR
 	PerformanceMetrics *PerformanceMetrics `xml:"PerformanceMetrics,omitempty" json:"PerformanceMetrics,omitempty"`
 	ItemCount          *int                `xml:"ItemCount,omitempty" json:"ItemCount,omitempty" db:"item_count,omitempty"`
